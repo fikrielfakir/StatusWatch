@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service.name }} - DownDetector Clone{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Service Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>
+                    <span class="status-indicator status-{{ service.get_status() }}"></span>
+                    {{ service.name }}
+                </h1>
+                <p class="text-muted">
+                    <a href="{{ service.url }}" target="_blank" class="text-decoration-none">
+                        <i data-feather="external-link" class="me-1"></i>
+                        {{ service.url }}
+                    </a>
+                </p>
+            </div>
+            <div>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                    <i data-feather="arrow-left" class="me-1"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Current Status Card -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Status</h5>
+                        <div class="d-flex align-items-center">
+                            {% set status = service.get_status() %}
+                            <span class="status-indicator status-{{ status }} me-2" style="width: 16px; height: 16px;"></span>
+                            <h4 class="mb-0">
+                                {% if status == 'up' %}
+                                    <span class="text-success">Operational</span>
+                                {% elif status == 'issues' %}
+                                    <span class="text-warning">Some Issues</span>
+                                {% else %}
+                                    <span class="text-danger">Service Down</span>
+                                {% endif %}
+                            </h4>
+                        </div>
+                        <p class="text-muted mt-2">
+                            {{ service.get_recent_reports_count() }} reports in the last 24 hours
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Report an Issue</h5>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reportModal">
+                            <i data-feather="alert-circle" class="me-1"></i>
+                            Report Problem
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Reports Over Time (Last 24 Hours)</h5>
+                        <div class="chart-container">
+                            <canvas id="reportsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <div class="mb-3">
+                            <strong>Last Hour:</strong>
+                            <span class="badge bg-secondary" id="lastHourCount">0</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Last 6 Hours:</strong>
+                            <span class="badge bg-secondary" id="last6HourCount">0</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Last 24 Hours:</strong>
+                            <span class="badge bg-secondary" id="last24HourCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map and Recent Reports -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Report Locations</h5>
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent Reports</h5>
+                        <div id="recentReports" class="mt-3">
+                            <!-- Reports will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report Issue with {{ service.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="reportForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location (Optional)</label>
+                        <input type="text" class="form-control" id="location" placeholder="e.g., New York, USA">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Problem Description</label>
+                        <textarea class="form-control" id="description" rows="3" 
+                                placeholder="Describe the issue you're experiencing..." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="getLocationBtn">
+                            <i data-feather="map-pin" class="me-1"></i>
+                            Use My Location
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const SERVICE_ID = {{ service.id }};
+    const SERVICE_NAME = "{{ service.name }}";
+</script>
+<script src="{{ url_for('static', filename='js/service-detail.js') }}"></script>
+{% endblock %}

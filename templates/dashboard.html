@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - DownDetector Clone{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i data-feather="activity" class="me-2"></i>
+                Service Status Dashboard
+            </h1>
+            <div class="input-group" style="max-width: 300px;">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search services...">
+                <span class="input-group-text">
+                    <i data-feather="search"></i>
+                </span>
+            </div>
+        </div>
+        
+        <!-- Status Summary -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">
+                            <i data-feather="check-circle" class="me-2"></i>
+                            Operational
+                        </h5>
+                        <h2 class="text-success" id="upCount">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-warning">
+                            <i data-feather="alert-triangle" class="me-2"></i>
+                            Issues
+                        </h5>
+                        <h2 class="text-warning" id="issuesCount">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-danger">
+                            <i data-feather="x-circle" class="me-2"></i>
+                            Down
+                        </h5>
+                        <h2 class="text-danger" id="downCount">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Services Grid -->
+        <div class="row" id="servicesGrid">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4 mb-3 service-item" data-service-name="{{ service.name.lower() }}" data-service-id="{{ service.id }}">
+                <div class="card service-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="status-indicator status-{{ service.status }}"></span>
+                            <h5 class="card-title mb-0">{{ service.name }}</h5>
+                        </div>
+                        
+                        <p class="card-text text-muted small">
+                            {{ service.recent_reports }} reports in last 24h
+                        </p>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('main.service_detail', service_id=service.id) }}" 
+                               class="btn btn-outline-primary btn-sm">
+                                <i data-feather="eye" class="me-1"></i>
+                                View Details
+                            </a>
+                            
+                            <small class="text-muted">
+                                {% if service.status == 'up' %}
+                                    <i data-feather="check" class="text-success"></i> Operational
+                                {% elif service.status == 'issues' %}
+                                    <i data-feather="alert-triangle" class="text-warning"></i> Issues
+                                {% else %}
+                                    <i data-feather="x" class="text-danger"></i> Down
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if not services %}
+        <div class="text-center py-5">
+            <i data-feather="inbox" class="mb-3" style="width: 48px; height: 48px;"></i>
+            <h3>No Services Available</h3>
+            <p class="text-muted">No services are currently being monitored.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
