@@ -150,15 +150,15 @@ def api_chart_data(service_id):
     hours = request.args.get('hours', 24, type=int)
     cutoff = datetime.utcnow() - timedelta(hours=hours)
     
-    # Group reports by hour
+    # Group reports by hour using PostgreSQL date_trunc
     reports = db.session.query(
-        func.strftime('%Y-%m-%d %H:00:00', Report.timestamp).label('hour'),
+        func.date_trunc('hour', Report.timestamp).label('hour'),
         func.count(Report.id).label('count')
     ).filter(
         Report.service_id == service_id,
         Report.timestamp >= cutoff
     ).group_by(
-        func.strftime('%Y-%m-%d %H:00:00', Report.timestamp)
+        func.date_trunc('hour', Report.timestamp)
     ).all()
     
     # Create hourly data structure
@@ -169,10 +169,9 @@ def api_chart_data(service_id):
     report_dict = {report.hour: report.count for report in reports}
     
     while current_time <= end_time:
-        hour_str = current_time.strftime('%Y-%m-%d %H:00:00')
         chart_data.append({
             'time': current_time.strftime('%H:00'),
-            'reports': report_dict.get(hour_str, 0)
+            'reports': report_dict.get(current_time.replace(tzinfo=None), 0)
         })
         current_time += timedelta(hours=1)
     
