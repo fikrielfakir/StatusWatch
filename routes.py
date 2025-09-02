@@ -24,7 +24,9 @@ def dashboard():
             'url': service.url,
             'icon_path': service.icon_path,
             'status': status,
-            'recent_reports': recent_count
+            'recent_reports': recent_count,
+            'response_time': service.response_time,
+            'last_checked': service.last_checked.isoformat() if service.last_checked else None
         })
     
     return render_template('dashboard.html', services=services_data)

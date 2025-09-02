@@ -93,6 +93,10 @@ import auth
 app.register_blueprint(routes.bp)
 app.register_blueprint(auth.bp)
 
+# Start the service monitor
+from monitor import monitor
+monitor.start()
+
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.get(int(user_id))

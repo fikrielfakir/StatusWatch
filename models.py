@@ -16,11 +16,19 @@ class Service(db.Model):
     name = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(200), nullable=False)
     icon_path = db.Column(db.String(200), nullable=True)
+    current_status = db.Column(db.String(20), default='up')
+    last_checked = db.Column(db.DateTime, default=datetime.utcnow)
+    response_time = db.Column(db.Float, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     reports = db.relationship('Report', backref='service', lazy=True, cascade='all, delete-orphan')
     
     def get_status(self):
-        """Determine service status based on recent reports"""
+        """Get current status combining real monitoring and user reports"""
+        # Use the real-time monitored status
+        if self.current_status:
+            return self.current_status
+        
+        # Fallback to report-based status if no monitoring data
         now = datetime.utcnow()
         one_hour_ago = now - timedelta(hours=1)
         
@@ -37,6 +45,41 @@ class Service(db.Model):
             return 'issues'
         else:
             return 'up'
+    
+    def check_health(self):
+        """Check if the service is actually responding"""
+        import requests
+        import time
+        
+        try:
+            start_time = time.time()
+            response = requests.get(self.url, timeout=10, allow_redirects=True)
+            response_time = (time.time() - start_time) * 1000  # Convert to milliseconds
+            
+            self.response_time = response_time
+            self.last_checked = datetime.utcnow()
+            
+            if response.status_code == 200:
+                self.current_status = 'up'
+            elif response.status_code in [500, 502, 503, 504]:
+                self.current_status = 'down'
+            else:
+                self.current_status = 'issues'
+                
+        except requests.exceptions.Timeout:
+            self.current_status = 'down'
+            self.response_time = None
+            self.last_checked = datetime.utcnow()
+        except requests.exceptions.ConnectionError:
+            self.current_status = 'down'  
+            self.response_time = None
+            self.last_checked = datetime.utcnow()
+        except Exception:
+            self.current_status = 'issues'
+            self.response_time = None
+            self.last_checked = datetime.utcnow()
+            
+        return self.current_status
     
     def get_recent_reports_count(self, hours=24):
         """Get count of reports in the last N hours"""

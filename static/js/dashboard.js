@@ -54,12 +54,37 @@ async function refreshDashboard() {
             if (serviceCard) {
                 const indicator = serviceCard.querySelector('.status-indicator');
                 const reportsCount = serviceCard.querySelector('.card-text');
+                const statusText = serviceCard.querySelector('.text-muted small');
                 
                 // Update status indicator
-                indicator.className = `status-indicator status-${service.status}`;
+                indicator.className = `status-indicator status-${service.status} me-2`;
                 
-                // Update reports count
-                reportsCount.textContent = `${service.recent_reports} reports in last 24h`;
+                // Update reports count with response time
+                let reportText = `${service.recent_reports} reports in last 24h`;
+                if (service.response_time) {
+                    reportText += ` • ${Math.round(service.response_time)}ms response`;
+                }
+                reportsCount.textContent = reportText;
+                
+                // Update status text
+                if (statusText) {
+                    let statusIcon = 'check';
+                    let statusClass = 'text-success';
+                    let statusLabel = 'Operational';
+                    
+                    if (service.status === 'issues') {
+                        statusIcon = 'alert-triangle';
+                        statusClass = 'text-warning';
+                        statusLabel = 'Issues';
+                    } else if (service.status === 'down') {
+                        statusIcon = 'x';
+                        statusClass = 'text-danger';
+                        statusLabel = 'Down';
+                    }
+                    
+                    statusText.innerHTML = `<i data-feather="${statusIcon}" class="${statusClass}"></i> ${statusLabel}`;
+                    feather.replace();
+                }
             }
         });
         
@@ -75,9 +100,58 @@ socket.on('new_report', function(data) {
     const serviceCard = document.querySelector(`[data-service-id="${data.service_id}"]`);
     if (serviceCard) {
         const indicator = serviceCard.querySelector('.status-indicator');
-        indicator.className = `status-indicator status-${data.new_status}`;
+        indicator.className = `status-indicator status-${data.new_status} me-2`;
         
         // Update counts
         updateStatusCounts();
     }
+});
+
+// Listen for real-time status updates from monitoring
+socket.on('status_updates', function(updates) {
+    updates.forEach(update => {
+        const serviceCard = document.querySelector(`[data-service-id="${update.service_id}"]`);
+        if (serviceCard) {
+            const indicator = serviceCard.querySelector('.status-indicator');
+            const reportsCount = serviceCard.querySelector('.card-text');
+            const statusText = serviceCard.querySelector('.text-muted small');
+            
+            // Update status indicator
+            indicator.className = `status-indicator status-${update.new_status} me-2`;
+            
+            // Show a brief notification
+            console.log(`Service ${update.name} status changed: ${update.old_status} → ${update.new_status}`);
+            
+            // Add response time if available
+            if (update.response_time && reportsCount) {
+                const currentText = reportsCount.textContent.split(' •')[0];
+                reportsCount.textContent = `${currentText} • ${Math.round(update.response_time)}ms response`;
+            }
+        }
+    });
+    
+    updateStatusCounts();
+});
+
+// Listen for periodic dashboard refresh
+socket.on('dashboard_refresh', function(services) {
+    services.forEach(service => {
+        const serviceCard = document.querySelector(`[data-service-id="${service.id}"]`);
+        if (serviceCard) {
+            const indicator = serviceCard.querySelector('.status-indicator');
+            const reportsCount = serviceCard.querySelector('.card-text');
+            
+            // Update status indicator
+            indicator.className = `status-indicator status-${service.status} me-2`;
+            
+            // Update reports count with response time
+            let reportText = `${service.recent_reports} reports in last 24h`;
+            if (service.response_time) {
+                reportText += ` • ${Math.round(service.response_time)}ms response`;
+            }
+            reportsCount.textContent = reportText;
+        }
+    });
+    
+    updateStatusCounts();
 });
