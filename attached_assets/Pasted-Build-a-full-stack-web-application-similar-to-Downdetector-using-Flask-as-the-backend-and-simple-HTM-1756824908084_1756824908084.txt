@@ -1,0 +1,101 @@
+Build a full-stack web application similar to Downdetector using Flask as the backend and simple HTML/JS frontend. The project must run on Replit.
+
+📌 Requirements
+1. Backend (Flask)
+
+Use Flask framework.
+
+Database: SQLite (lightweight, easy for Replit).
+
+Define models/tables:
+
+Service: id, name, url, created_at.
+
+Report: id, service_id, timestamp, location, description.
+
+REST API endpoints:
+
+POST /api/report → submit a new outage report.
+
+GET /api/reports/<service_id> → fetch reports by service (with optional query params: date range).
+
+GET /api/services → list all monitored services.
+
+POST /api/services → (admin only) add new services.
+
+Use Flask-SocketIO for real-time updates (when a new report is submitted).
+
+Basic authentication for admins (Flask-Login or JWT).
+
+2. Frontend (HTML + Tailwind + JavaScript)
+
+Landing dashboard with:
+
+A search bar to filter services.
+
+A list of services (WhatsApp, Twitter, etc.).
+
+A status indicator (green = no reports, red = spike in reports).
+
+Service details page:
+
+A form to submit outage reports (location, description).
+
+A real-time graph (Chart.js) showing number of outage reports over time.
+
+A map view (Leaflet.js) showing report locations.
+
+Responsive, mobile-friendly design using Tailwind CSS.
+
+3. Features
+
+Users can:
+
+Select a service and submit outage reports.
+
+View recent reports and statistics.
+
+Admins can:
+
+Add/edit/remove services.
+
+View all reports in an admin dashboard.
+
+Outage detection logic: if reports for a service spike in a short period, mark the service as "Likely Down".
+
+4. Deployment / Setup
+
+Include a requirements.txt with dependencies:
+
+flask
+flask-socketio
+flask-login
+flask_sqlalchemy
+eventlet
+requests
+gunicorn
+
+
+Provide a README with instructions:
+
+How to run locally (flask run).
+
+How to run on Replit.
+
+Add a Procfile for deployment:
+
+web: gunicorn app:app
+
+✅ Deliverables
+
+A complete Flask app (backend + templates + static files).
+
+Basic working frontend:
+
+Submit outage reports.
+
+View live graphs & maps.
+
+Admin dashboard for service management.
+
+README with clear setup instructions.
