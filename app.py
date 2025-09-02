@@ -60,20 +60,25 @@ with app.app_context():
     # Create default services if none exist
     if models.Service.query.count() == 0:
         default_services = [
-            {'name': 'WhatsApp', 'url': 'https://whatsapp.com'},
-            {'name': 'Instagram', 'url': 'https://instagram.com'},
-            {'name': 'Facebook', 'url': 'https://facebook.com'},
-            {'name': 'Twitter', 'url': 'https://twitter.com'},
-            {'name': 'YouTube', 'url': 'https://youtube.com'},
-            {'name': 'Gmail', 'url': 'https://gmail.com'},
-            {'name': 'Discord', 'url': 'https://discord.com'},
-            {'name': 'TikTok', 'url': 'https://tiktok.com'},
+            {'name': 'WhatsApp', 'url': 'https://whatsapp.com', 'icon_path': 'images/logos/WhatsApp_logo_icon.png'},
+            {'name': 'Instagram', 'url': 'https://instagram.com', 'icon_path': 'images/logos/Instagram_logo_icon.png'},
+            {'name': 'Facebook', 'url': 'https://facebook.com', 'icon_path': 'images/logos/Facebook_logo_icon.png'},
+            {'name': 'Twitter', 'url': 'https://twitter.com', 'icon_path': 'images/logos/Twitter_X_logo_icon.png'},
+            {'name': 'YouTube', 'url': 'https://youtube.com', 'icon_path': 'images/logos/YouTube_logo_icon.png'},
+            {'name': 'Gmail', 'url': 'https://gmail.com', 'icon_path': 'images/logos/Gmail_logo_icon.png'},
+            {'name': 'Discord', 'url': 'https://discord.com', 'icon_path': 'images/logos/Discord_logo_icon.png'},
+            {'name': 'TikTok', 'url': 'https://tiktok.com', 'icon_path': 'images/logos/TikTok_logo_icon.png'},
+            {'name': 'LinkedIn', 'url': 'https://linkedin.com', 'icon_path': 'images/logos/LinkedIn_logo_icon.png'},
+            {'name': 'Snapchat', 'url': 'https://snapchat.com', 'icon_path': 'images/logos/Snapchat_logo_icon.png'},
+            {'name': 'Reddit', 'url': 'https://reddit.com', 'icon_path': 'images/logos/Reddit_logo_icon.png'},
+            {'name': 'Spotify', 'url': 'https://spotify.com', 'icon_path': 'images/logos/Spotify_logo_icon.png'},
         ]
         
         for service_data in default_services:
             service = models.Service(
                 name=service_data['name'],
-                url=service_data['url']
+                url=service_data['url'],
+                icon_path=service_data.get('icon_path')
             )
             db.session.add(service)
         

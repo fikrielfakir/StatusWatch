@@ -15,6 +15,7 @@ class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(200), nullable=False)
+    icon_path = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     reports = db.relationship('Report', backref='service', lazy=True, cascade='all, delete-orphan')
     

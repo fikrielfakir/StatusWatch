@@ -22,6 +22,7 @@ def dashboard():
             'id': service.id,
             'name': service.name,
             'url': service.url,
+            'icon_path': service.icon_path,
             'status': status,
             'recent_reports': recent_count
         })
@@ -50,6 +51,7 @@ def api_services():
         'id': service.id,
         'name': service.name,
         'url': service.url,
+        'icon_path': service.icon_path,
         'status': service.get_status(),
         'recent_reports': service.get_recent_reports_count()
     } for service in services])

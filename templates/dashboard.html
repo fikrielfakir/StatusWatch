@@ -62,7 +62,13 @@
                 <div class="card service-card h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
-                            <span class="status-indicator status-{{ service.status }}"></span>
+                            {% if service.icon_path %}
+                            <img src="{{ url_for('static', filename=service.icon_path) }}" 
+                                 alt="{{ service.name }} logo" 
+                                 class="service-logo me-2"
+                                 style="width: 32px; height: 32px; object-fit: contain;">
+                            {% endif %}
+                            <span class="status-indicator status-{{ service.status }} me-2"></span>
                             <h5 class="card-title mb-0">{{ service.name }}</h5>
                         </div>
                         
