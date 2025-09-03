@@ -1,0 +1,306 @@
+dashboard.js:11 Uncaught 
+/socket.io/?EIO=4&transport=polling&t=PaF1cfJ&sid=ukT8w19Jo3i6okdbAAAD:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/acorns_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/1password_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/acculynx_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/socket.io/?EIO=4&transport=polling&t=PaF1cff&sid=ukT8w19Jo3i6okdbAAAD:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/socket.io/?EIO=4&transport=polling&t=PaF1dRn&sid=ukT8w19Jo3i6okdbAAAD:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/Gmail_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/Facebook_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/Discord_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/Twitter_X_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/LinkedIn_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/TikTok_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/static/images/logos/WhatsApp_logo_icon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=ilrErIxLgc74DU6mAAAA' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF1kB1&sid=ilrErIxLgc74DU6mAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF1kB2&sid=ilrErIxLgc74DU6mAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF1sfK:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+/socket.io/?EIO=4&transport=polling&t=PaF1yGs:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=infu_8waYmI_sF2UAAAD' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF27F3&sid=infu_8waYmI_sF2UAAAD:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF27F4&sid=infu_8waYmI_sF2UAAAD:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=uVcM6UVEw9qZ49slAAAA' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF2LnN&sid=uVcM6UVEw9qZ49slAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF2LnS&sid=uVcM6UVEw9qZ49slAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=5rHE-XYloE4jaDujAAAA' failed: 
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF2aRK&sid=5rHE-XYloE4jaDujAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF2aRR&sid=5rHE-XYloE4jaDujAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF2iNR&sid=5rHE-XYloE4jaDujAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=fKy_FuQ3Fm68HJ7zAAAA' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF2p5k&sid=fKy_FuQ3Fm68HJ7zAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF2p5n&sid=fKy_FuQ3Fm68HJ7zAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF31l5.0&sid=w41-uzq4Q4uQs21JAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF31l5&sid=w41-uzq4Q4uQs21JAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=w41-uzq4Q4uQs21JAAAA' failed: 
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF39fe&sid=w41-uzq4Q4uQs21JAAAA:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=RhMPcM0NGStbpaBcAAAC' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF3ULe&sid=RhMPcM0NGStbpaBcAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF3ULf&sid=RhMPcM0NGStbpaBcAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=AR0qN_atZUSD3wmPAAAC' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF3wuo&sid=AR0qN_atZUSD3wmPAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF3wuu&sid=AR0qN_atZUSD3wmPAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=uquW9cx6bIFqcLHyAAAC' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF4NAJ&sid=uquW9cx6bIFqcLHyAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF4NAJ.0&sid=uquW9cx6bIFqcLHyAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=rLDJABBkUX9J3ftAAAAB' failed: Invalid frame header
+value @ cdn.socket.io/4.7.2/socket.io.min.js:6
+/socket.io/?EIO=4&transport=polling&t=PaF4j5K&sid=rLDJABBkUX9J3ftAAAAB:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+/socket.io/?EIO=4&transport=polling&t=PaF4j5K.0&sid=rLDJABBkUX9J3ftAAAAB:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=JF649UDEHDdkVjBAAAAD' failed: Invalid frame header
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+  GET https://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=polling&t=PaF4xRI&sid=JF649UDEHDdkVjBAAAAD 400 (Bad Request)
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+a @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+ WebSocket connection to 'wss://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=websocket&sid=PL5OCad8LR2Lr9huAAAA' failed: Invalid frame header
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+  POST https://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=polling&t=PaF59Yc&sid=PL5OCad8LR2Lr9huAAAA 400 (Bad Request)
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+A @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+e.doWrite.e.writable @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+a @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+setTimeout
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+setTimeout
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+a @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+  GET https://a0589762-a1d1-47aa-8cbd-bcbffc765533-00-2ca4zgk8geug3.worf.replit.dev/socket.io/?EIO=4&transport=polling&t=PaF59Yc.0&sid=PL5OCad8LR2Lr9huAAAA 400 (Bad Request)
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+a @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+setTimeout
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
+setTimeout
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+U.emit @ socket.io.min.js:6
+value @ socket.io.min.js:6
+r.onreadystatechange @ socket.io.min.js:6
+XMLHttpRequest.send
+value @ socket.io.min.js:6
+i @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+value @ socket.io.min.js:6
+a @ socket.io.min.js:6
+value @ socket.io.min.js:6
+(anonymous) @ socket.io.min.js:6
