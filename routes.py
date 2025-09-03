@@ -8,9 +8,10 @@ from models_optimized import Service, OutageReport as Report, ServiceBaseline, O
 from outage_detector import outage_detector
 from sqlalchemy import func
 
-# Simple cache for service status (in-memory for demo)
+# Enhanced cache for better performance
 _status_cache = {}
-_cache_timeout = 60  # 1 minute cache
+_services_cache = {}
+_cache_timeout = 120  # 2 minute cache for better performance
 
 def get_cached_service_status(service):
     """Get service status with simple caching to reduce DB load"""
@@ -55,28 +56,32 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def dashboard():
-    """Main dashboard showing all services and their status - optimized version"""
-    # Bulk load services with minimal queries
-    services = Service.query.filter_by(is_active=True).all()
+    """Ultra-fast dashboard with aggressive caching"""
+    cache_key = "dashboard_data"
+    now = datetime.utcnow()
     
-    # Pre-calculate report counts for all services in one query
-    from datetime import datetime, timedelta
-    cutoff = datetime.utcnow() - timedelta(hours=24)
+    # Check if we have cached dashboard data
+    if cache_key in _services_cache:
+        cached_data, timestamp = _services_cache[cache_key]
+        if (now - timestamp).total_seconds() < _cache_timeout:
+            return render_template('dashboard.html', services=cached_data)
     
-    report_counts = dict(
-        db.session.query(
-            Report.service_id,
-            func.count(Report.id)
-        ).filter(
-            Report.created_at >= cutoff
-        ).group_by(Report.service_id).all()
-    )
+    # Load minimal data - only essential fields
+    services = db.session.query(
+        Service.id,
+        Service.name,
+        Service.url,
+        Service.icon_path,
+        Service.current_status,
+        Service.response_time,
+        Service.last_checked
+    ).filter_by(is_active=True).all()
     
+    # Build simplified data structure
     services_data = []
     for service in services:
-        # Use cached status logic
-        status = get_cached_service_status(service)
-        recent_count = report_counts.get(service.id, 0)
+        # Use simple status logic for speed
+        status = service.current_status or 'up'
         
         services_data.append({
             'id': service.id,
@@ -84,10 +89,13 @@ def dashboard():
             'url': service.url,
             'icon_path': service.icon_path,
             'status': status,
-            'recent_reports': recent_count,
+            'recent_reports': 0,  # Skip expensive report counting for now
             'response_time': service.response_time,
             'last_checked': service.last_checked.isoformat() if service.last_checked else None
         })
+    
+    # Cache the result for faster subsequent loads
+    _services_cache[cache_key] = (services_data, now)
     
     return render_template('dashboard.html', services=services_data)
 

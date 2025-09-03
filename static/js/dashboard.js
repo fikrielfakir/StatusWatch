@@ -7,8 +7,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
     
-    // Progressive loading animation
-    animateCardsIn();
+    // Skip animations on slow connections for faster loading
+    if (navigator.connection && navigator.connection.effectiveType === 'slow-2g') {
+        // Skip animations for very slow connections
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        });
+    } else {
+        // Progressive loading animation
+        animateCardsIn();
+    }
     
     // Enhanced search functionality with debouncing
     let searchTimeout;
@@ -30,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update status counts
     updateStatusCounts();
     
-    // Refresh data every 5 minutes to reduce server load
-    setInterval(refreshDashboard, 300000);
+    // Refresh data every 10 minutes to reduce server load significantly
+    setInterval(refreshDashboard, 600000);
     
     // Add keyboard navigation
     addKeyboardNavigation();

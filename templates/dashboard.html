@@ -64,15 +64,6 @@
     <div class="container">
         <h2 class="section-title">Services</h2>
         
-        <div class="mb-4 text-end">
-            <div class="input-group" style="max-width: 300px; margin-left: auto;">
-                <input type="text" class="form-control" placeholder="Search...">
-                <button class="btn btn-primary" type="button">
-                    <i data-feather="search" style="width: 16px; height: 16px;"></i>
-                </button>
-            </div>
-        </div>
-        
         <div class="row" id="servicesGrid">
             {% for service in services %}
             <div class="col-md-6 col-lg-3 mb-4 service-item" data-service-name="{{ service.name.lower() }}" data-service-id="{{ service.id }}">

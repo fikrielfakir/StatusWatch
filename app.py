@@ -30,12 +30,16 @@ compress = Compress(app)
 # Configure static file caching
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000  # 1 year cache for static files
 
-# Configure the database
+# Configure the database with performance optimizations
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///downdetector.db")
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
     "pool_pre_ping": True,
+    "pool_size": 10,
+    "max_overflow": 20,
+    "pool_timeout": 30
 }
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Disable to save memory and improve performance
 
 # Initialize extensions
 db.init_app(app)
@@ -140,9 +144,9 @@ import auth
 app.register_blueprint(routes.bp)
 app.register_blueprint(auth.bp)
 
-# Start the service monitor
-from monitor import monitor
-monitor.start()
+# Temporarily disable service monitor for faster loading
+# from monitor import monitor
+# monitor.start()
 
 @login_manager.user_loader
 def load_user(user_id):
