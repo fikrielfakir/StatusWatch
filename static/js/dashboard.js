@@ -1,27 +1,40 @@
-// Dashboard functionality
+// Modern Dashboard functionality with smooth animations
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const serviceItems = document.querySelectorAll('.service-item');
+    const serviceCards = document.querySelectorAll('.service-card');
     
-    // Search functionality
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        
-        serviceItems.forEach(item => {
-            const serviceName = item.dataset.serviceName;
-            if (serviceName.includes(searchTerm)) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
+    // Add smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    // Progressive loading animation
+    animateCardsIn();
+    
+    // Enhanced search functionality with debouncing
+    let searchTimeout;
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(this.value.toLowerCase());
+            }, 300);
         });
-    });
+        
+        // Add search placeholder animation
+        animateSearchPlaceholder();
+    }
+    
+    // Add hover effects
+    addHoverEffects();
     
     // Update status counts
     updateStatusCounts();
     
-    // Refresh data every 30 seconds
+    // Refresh data every 30 seconds with visual feedback
     setInterval(refreshDashboard, 30000);
+    
+    // Add keyboard navigation
+    addKeyboardNavigation();
 });
 
 function updateStatusCounts() {
@@ -29,19 +42,24 @@ function updateStatusCounts() {
     let issuesCount = 0;
     let downCount = 0;
     
-    document.querySelectorAll('.status-indicator').forEach(indicator => {
-        if (indicator.classList.contains('status-up')) {
+    document.querySelectorAll('.wave').forEach(wave => {
+        if (wave.classList.contains('status-up')) {
             upCount++;
-        } else if (indicator.classList.contains('status-issues')) {
+        } else if (wave.classList.contains('status-issues')) {
             issuesCount++;
-        } else if (indicator.classList.contains('status-down')) {
+        } else if (wave.classList.contains('status-down')) {
             downCount++;
         }
     });
     
-    document.getElementById('upCount').textContent = upCount;
-    document.getElementById('issuesCount').textContent = issuesCount;
-    document.getElementById('downCount').textContent = downCount;
+    // Update counts if elements exist
+    const upCountEl = document.getElementById('upCount');
+    const issuesCountEl = document.getElementById('issuesCount');
+    const downCountEl = document.getElementById('downCount');
+    
+    if (upCountEl) upCountEl.textContent = upCount;
+    if (issuesCountEl) issuesCountEl.textContent = issuesCount;
+    if (downCountEl) downCountEl.textContent = downCount;
 }
 
 async function refreshDashboard() {
@@ -56,8 +74,14 @@ async function refreshDashboard() {
                 const reportsCount = serviceCard.querySelector('.card-text');
                 const statusText = serviceCard.querySelector('.text-muted small');
                 
-                // Update status indicator
-                indicator.className = `status-indicator status-${service.status} me-2`;
+                // Update wave status
+                const wave = serviceCard.querySelector('.wave');
+                if (wave) {
+                    wave.className = `wave status-${service.status}`;
+                }
+                if (indicator) {
+                    indicator.className = `status-indicator status-${service.status} me-2`;
+                }
                 
                 // Update reports count with response time
                 let reportText = `${service.recent_reports} reports in last 24h`;
@@ -99,8 +123,14 @@ socket.on('new_report', function(data) {
     // Update the specific service card
     const serviceCard = document.querySelector(`[data-service-id="${data.service_id}"]`);
     if (serviceCard) {
+        const wave = serviceCard.querySelector('.wave');
         const indicator = serviceCard.querySelector('.status-indicator');
-        indicator.className = `status-indicator status-${data.new_status} me-2`;
+        if (wave) {
+            wave.className = `wave status-${data.new_status}`;
+        }
+        if (indicator) {
+            indicator.className = `status-indicator status-${data.new_status} me-2`;
+        }
         
         // Update counts
         updateStatusCounts();
@@ -116,8 +146,14 @@ socket.on('status_updates', function(updates) {
             const reportsCount = serviceCard.querySelector('.card-text');
             const statusText = serviceCard.querySelector('.text-muted small');
             
-            // Update status indicator
-            indicator.className = `status-indicator status-${update.new_status} me-2`;
+            // Update wave and status indicator
+            const wave = serviceCard.querySelector('.wave');
+            if (wave) {
+                wave.className = `wave status-${update.new_status}`;
+            }
+            if (indicator) {
+                indicator.className = `status-indicator status-${update.new_status} me-2`;
+            }
             
             // Show a brief notification
             console.log(`Service ${update.name} status changed: ${update.old_status} → ${update.new_status}`);
@@ -141,8 +177,14 @@ socket.on('dashboard_refresh', function(services) {
             const indicator = serviceCard.querySelector('.status-indicator');
             const reportsCount = serviceCard.querySelector('.card-text');
             
-            // Update status indicator
-            indicator.className = `status-indicator status-${service.status} me-2`;
+            // Update wave and status indicator
+            const wave = serviceCard.querySelector('.wave');
+            if (wave) {
+                wave.className = `wave status-${service.status}`;
+            }
+            if (indicator) {
+                indicator.className = `status-indicator status-${service.status} me-2`;
+            }
             
             // Update reports count with response time
             let reportText = `${service.recent_reports} reports in last 24h`;

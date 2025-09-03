@@ -83,11 +83,23 @@
         }
         
         .hero-title {
-            font-size: 3.5rem;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 300;
             color: var(--text-dark);
             line-height: 1.2;
             margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .hero-title .highlight {
@@ -96,8 +108,9 @@
         }
         
         .search-bar {
-            max-width: 400px;
+            max-width: 500px;
             margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.3s both;
         }
         
         .search-bar .form-control {
@@ -225,6 +238,138 @@
         
         .footer a:hover {
             color: white;
+        }
+        
+        /* Modern Service Icon Styles */
+        .service-icon-twitter { background: #1DA1F2 !important; }
+        .service-icon-youtube { background: #FF0000 !important; }
+        .service-icon-tiktok { background: #000000 !important; }
+        .service-icon-instagram { background: #E4405F !important; }
+        .service-icon-facebook { background: #1877F2 !important; }
+        .service-icon-linkedin { background: #0077B5 !important; }
+        .service-icon-whatsapp { background: #25D366 !important; }
+        .service-icon-snapchat { background: #FFFC00 !important; }
+        .service-icon-discord { background: #5865F2 !important; }
+        .service-icon-reddit { background: #FF4500 !important; }
+        .service-icon-spotify { background: #1DB954 !important; }
+        .service-icon-gmail { background: #EA4335 !important; }
+        
+        .service-icon-img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+        
+        .service-icon-snapchat .service-icon-img {
+            filter: none;
+        }
+        
+        /* Card Variants */
+        .featured-card {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(93, 173, 226, 0.15);
+        }
+        
+        .modern-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .compact-card {
+            height: 240px;
+        }
+        
+        /* Improved Animations */
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .service-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .service-card:hover .service-name {
+            color: var(--primary-blue);
+        }
+        
+        /* Better Wave Animation */
+        @keyframes wave-flow {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .wave {
+            animation: wave-flow 1.5s ease-out;
+        }
+        
+        /* Search Enhancement */
+        .search-bar .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(93, 173, 226, 0.25);
+            transform: scale(1.02);
+        }
+        
+        /* Button Enhancements */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .btn-yellow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+        }
+        
+        /* Modern Typography */
+        h1, h2, h3, h4, h5 {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+        
+        /* Accessibility Improvements */
+        .service-card:focus {
+            outline: 3px solid var(--primary-blue);
+            outline-offset: 2px;
+        }
+        
+        /* Loading States */
+        .service-card.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .service-card.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--primary-blue);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>

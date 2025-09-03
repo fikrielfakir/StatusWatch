@@ -27,13 +27,13 @@
     <div class="row" id="featuredServices">
         {% for service in services[:3] %}
         <div class="col-md-4 mb-4">
-            <div class="service-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
+            <div class="service-card featured-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;" data-service-id="{{ service.id }}">
                 <div class="p-4 text-center">
-                    <div class="service-icon" style="background: {% if service.name == 'Twitter' %}#1DA1F2{% elif service.name == 'YouTube' %}#FF0000{% elif service.name == 'TikTok' %}#000000{% else %}#5DADE2{% endif %};">
+                    <div class="service-icon service-icon-{{ service.name.lower().replace(' ', '') }}">
                         {% if service.icon_path %}
                         <img src="{{ url_for('static', filename=service.icon_path) }}" 
                              alt="{{ service.name }}" 
-                             style="width: 30px; height: 30px; object-fit: contain; filter: brightness(0) invert(1);">
+                             class="service-icon-img">
                         {% else %}
                         <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                         {% endif %}
@@ -73,26 +73,13 @@
         <div class="row" id="servicesGrid">
             {% for service in services %}
             <div class="col-md-6 col-lg-3 mb-4 service-item" data-service-name="{{ service.name.lower() }}" data-service-id="{{ service.id }}">
-                <div class="service-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
+                <div class="service-card modern-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
                     <div class="p-4 text-center">
-                        <div class="service-icon" style="background: 
-                            {% if service.name == 'Twitter' %}#1DA1F2
-                            {% elif service.name == 'YouTube' %}#FF0000
-                            {% elif service.name == 'TikTok' %}#000000
-                            {% elif service.name == 'Instagram' %}#E4405F
-                            {% elif service.name == 'Facebook' %}#1877F2
-                            {% elif service.name == 'LinkedIn' %}#0077B5
-                            {% elif service.name == 'WhatsApp' %}#25D366
-                            {% elif service.name == 'Snapchat' %}#FFFC00
-                            {% elif service.name == 'Discord' %}#5865F2
-                            {% elif service.name == 'Reddit' %}#FF4500
-                            {% elif service.name == 'Spotify' %}#1DB954
-                            {% elif service.name == 'Gmail' %}#EA4335
-                            {% else %}#5DADE2{% endif %};">
+                        <div class="service-icon service-icon-{{ service.name.lower().replace(' ', '') }}">
                             {% if service.icon_path %}
                             <img src="{{ url_for('static', filename=service.icon_path) }}" 
                                  alt="{{ service.name }}" 
-                                 style="width: 30px; height: 30px; object-fit: contain; {% if service.name != 'Snapchat' %}filter: brightness(0) invert(1);{% endif %}">
+                                 class="service-icon-img">
                             {% else %}
                             <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                             {% endif %}
@@ -114,26 +101,13 @@
                     {% set remaining_services = services[3:] %}
                     {% for service in remaining_services[:4] %}
                     <div class="col-md-6 mb-4">
-                        <div class="service-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
+                        <div class="service-card compact-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;" data-service-id="{{ service.id }}">
                             <div class="p-4 text-center">
-                                <div class="service-icon" style="background: 
-                                    {% if service.name == 'Twitter' %}#1DA1F2
-                                    {% elif service.name == 'YouTube' %}#FF0000
-                                    {% elif service.name == 'TikTok' %}#000000
-                                    {% elif service.name == 'Instagram' %}#E4405F
-                                    {% elif service.name == 'Facebook' %}#1877F2
-                                    {% elif service.name == 'LinkedIn' %}#0077B5
-                                    {% elif service.name == 'WhatsApp' %}#25D366
-                                    {% elif service.name == 'Snapchat' %}#FFFC00
-                                    {% elif service.name == 'Discord' %}#5865F2
-                                    {% elif service.name == 'Reddit' %}#FF4500
-                                    {% elif service.name == 'Spotify' %}#1DB954
-                                    {% elif service.name == 'Gmail' %}#EA4335
-                                    {% else %}#5DADE2{% endif %};">
+                                <div class="service-icon service-icon-{{ service.name.lower().replace(' ', '') }}">
                                     {% if service.icon_path %}
                                     <img src="{{ url_for('static', filename=service.icon_path) }}" 
                                          alt="{{ service.name }}" 
-                                         style="width: 30px; height: 30px; object-fit: contain; {% if service.name != 'Snapchat' %}filter: brightness(0) invert(1);{% endif %}">
+                                         class="service-icon-img">
                                     {% else %}
                                     <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                                     {% endif %}
