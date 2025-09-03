@@ -37,6 +37,108 @@ document.addEventListener('DOMContentLoaded', function() {
     addKeyboardNavigation();
 });
 
+// Animation functions
+function animateCardsIn() {
+    const cards = document.querySelectorAll('.service-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+}
+
+function animateSearchPlaceholder() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+    
+    const placeholders = [
+        'Search for a service...',
+        'Try "Discord", "Instagram", "Gmail"...',
+        'Find your favorite services...',
+        'Search 100+ monitored services...'
+    ];
+    
+    let currentIndex = 0;
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % placeholders.length;
+        searchInput.placeholder = placeholders[currentIndex];
+    }, 3000);
+}
+
+function addHoverEffects() {
+    const cards = document.querySelectorAll('.service-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+        });
+    });
+}
+
+function addKeyboardNavigation() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+    
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            this.blur();
+            this.value = '';
+            performSearch('');
+        }
+    });
+}
+
+function performSearch(query) {
+    const serviceItems = document.querySelectorAll('.service-item');
+    let visibleCount = 0;
+    
+    serviceItems.forEach(item => {
+        const serviceName = item.dataset.serviceName || '';
+        const shouldShow = serviceName.includes(query) || query === '';
+        
+        if (shouldShow) {
+            item.style.display = 'block';
+            item.style.opacity = '1';
+            visibleCount++;
+        } else {
+            item.style.opacity = '0';
+            setTimeout(() => {
+                if (item.style.opacity === '0') {
+                    item.style.display = 'none';
+                }
+            }, 300);
+        }
+    });
+    
+    // Show "no results" message if needed
+    const existingMessage = document.getElementById('noResults');
+    if (existingMessage) existingMessage.remove();
+    
+    if (visibleCount === 0 && query !== '') {
+        const noResultsDiv = document.createElement('div');
+        noResultsDiv.id = 'noResults';
+        noResultsDiv.className = 'text-center my-4';
+        noResultsDiv.innerHTML = `
+            <p class="text-muted">
+                <i data-feather="search" class="me-2"></i>
+                No services found for "${query}"
+            </p>
+        `;
+        document.getElementById('servicesGrid').appendChild(noResultsDiv);
+        feather.replace();
+    }
+}
+
 function updateStatusCounts() {
     let upCount = 0;
     let issuesCount = 0;

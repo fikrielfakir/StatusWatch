@@ -4,7 +4,8 @@ from flask import Blueprint, render_template, request, jsonify, flash, redirect,
 from flask_login import login_required, current_user
 from flask_socketio import emit
 from app import db, socketio
-from models import Service, Report
+from models import Service, Report, ServiceBaseline, OutageEvent, ServiceMetrics
+from outage_detector import outage_detector
 from sqlalchemy import func
 
 bp = Blueprint('main', __name__)
@@ -23,7 +24,7 @@ def dashboard():
             'name': service.name,
             'url': service.url,
             'icon_path': service.icon_path,
-            'status': status,
+            'status': service.get_status_with_anomaly(),  # Use enhanced status
             'recent_reports': recent_count,
             'response_time': service.response_time,
             'last_checked': service.last_checked.isoformat() if service.last_checked else None
@@ -54,7 +55,7 @@ def api_services():
         'name': service.name,
         'url': service.url,
         'icon_path': service.icon_path,
-        'status': service.get_status(),
+        'status': service.get_status_with_anomaly(),  # Use enhanced status
         'recent_reports': service.get_recent_reports_count()
     } for service in services])
 
@@ -98,7 +99,7 @@ def api_reports(service_id):
 
 @bp.route('/api/report', methods=['POST'])
 def api_submit_report():
-    """API endpoint to submit a new outage report"""
+    """API endpoint to submit a new outage report with enhanced processing"""
     data = request.get_json()
     
     if not data or not data.get('service_id'):
@@ -119,29 +120,18 @@ def api_submit_report():
     if recent_reports >= 3:
         return jsonify({'error': 'Too many reports. Please wait before submitting another.'}), 429
     
-    report = Report(
-        service_id=data['service_id'],
-        location=data.get('location', ''),
-        description=data.get('description', ''),
-        latitude=data.get('latitude'),
-        longitude=data.get('longitude'),
-        user_ip=user_ip
-    )
-    
-    db.session.add(report)
+    # Use enhanced outage detector for processing
+    report = outage_detector.process_report(data, user_ip)
     db.session.commit()
-    
-    # Emit real-time update
-    socketio.emit('new_report', {
-        'service_id': service.id,
-        'service_name': service.name,
-        'report': report.to_dict(),
-        'new_status': service.get_status()
-    })
     
     return jsonify({
         'message': 'Report submitted successfully',
-        'report_id': report.id
+        'report_id': report.id,
+        'geolocation': {
+            'city': report.city,
+            'country': report.country,
+            'region': report.region
+        }
     }), 201
 
 @bp.route('/api/chart-data/<int:service_id>')
@@ -186,3 +176,98 @@ def handle_connect():
 def handle_disconnect():
     """Handle WebSocket disconnection"""
     pass
+
+
+# Enhanced Analytics APIs for Outage Detection
+
+@bp.route('/api/service/<int:service_id>/heatmap')
+def api_service_heatmap(service_id):
+    """Get heatmap data for a service"""
+    hours = request.args.get('hours', 24, type=int)
+    service = Service.query.get_or_404(service_id)
+    
+    heatmap_data = outage_detector.get_heatmap_data(service_id, hours)
+    
+    return jsonify({
+        'service_id': service_id,
+        'service_name': service.name,
+        'hours': hours,
+        'heatmap_data': heatmap_data
+    })
+
+@bp.route('/api/service/<int:service_id>/trends')
+def api_service_trends(service_id):
+    """Get trending data and metrics for a service"""
+    hours = request.args.get('hours', 24, type=int)
+    service = Service.query.get_or_404(service_id)
+    
+    # Get report metrics
+    report_metrics = ServiceMetrics.get_metrics(service_id, 'reports', hours)
+    
+    # Get status change metrics
+    status_metrics = ServiceMetrics.get_metrics(service_id, 'status_change', hours)
+    
+    # Format data for charting
+    report_trend = []
+    for metric in report_metrics:
+        report_trend.append({
+            'timestamp': metric.timestamp.isoformat(),
+            'value': metric.value,
+            'metadata': json.loads(metric.extra_data) if metric.extra_data else {}
+        })
+    
+    status_changes = []
+    for metric in status_metrics:
+        status_changes.append({
+            'timestamp': metric.timestamp.isoformat(),
+            'metadata': json.loads(metric.extra_data) if metric.extra_data else {}
+        })
+    
+    return jsonify({
+        'service_id': service_id,
+        'service_name': service.name,
+        'hours': hours,
+        'report_trend': report_trend,
+        'status_changes': status_changes,
+        'current_status': service.get_status_with_anomaly()
+    })
+
+@bp.route('/api/outages')
+def api_outages():
+    """Get outage summary and active incidents"""
+    hours = request.args.get('hours', 24, type=int)
+    outage_summary = outage_detector.get_outage_summary(hours)
+    
+    return jsonify(outage_summary)
+
+@bp.route('/api/analytics/overview')
+def api_analytics_overview():
+    """Get overall analytics dashboard data"""
+    hours = request.args.get('hours', 24, type=int)
+    cutoff = datetime.utcnow() - timedelta(hours=hours)
+    
+    # Total services
+    total_services = Service.query.count()
+    
+    # Service status breakdown
+    services = Service.query.all()
+    status_counts = {'up': 0, 'issues': 0, 'down': 0}
+    for service in services:
+        status = service.get_status_with_anomaly()
+        status_counts[status] = status_counts.get(status, 0) + 1
+    
+    # Total reports in timeframe
+    total_reports = Report.query.filter(Report.timestamp >= cutoff).count()
+    
+    # Active outages
+    active_outages = OutageEvent.query.filter_by(status='ongoing').count()
+    
+    return jsonify({
+        'timeframe_hours': hours,
+        'summary': {
+            'total_services': total_services,
+            'status_breakdown': status_counts,
+            'total_reports': total_reports,
+            'active_outages': active_outages
+        }
+    })
