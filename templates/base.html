@@ -29,6 +29,35 @@
             --border-light: #E9ECEF;
         }
         
+        /* Page loading optimization */
+        .page-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        
+        .page-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
@@ -510,12 +539,32 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
+    <!-- Page Loading Indicator -->
+    <div class="page-loading" id="pageLoading">
+        <div class="spinner"></div>
+    </div>
+
     <script>
+        // Page loading optimization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading indicator once page is ready
+            setTimeout(() => {
+                const loading = document.getElementById('pageLoading');
+                if (loading) {
+                    loading.classList.add('hidden');
+                }
+            }, 500);
+        });
+
         // Initialize Feather icons
         feather.replace();
         
-        // Initialize Socket.IO
-        const socket = io();
+        // Initialize Socket.IO with optimized settings
+        const socket = io({
+            transports: ['polling'], // Use polling only for better compatibility
+            timeout: 5000,
+            forceNew: true
+        });
         
         socket.on('connect', function() {
             console.log('Connected to server');

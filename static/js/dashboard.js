@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update status counts
     updateStatusCounts();
     
-    // Refresh data every 30 seconds with visual feedback
-    setInterval(refreshDashboard, 30000);
+    // Refresh data every 2 minutes to reduce server load
+    setInterval(refreshDashboard, 120000);
     
     // Add keyboard navigation
     addKeyboardNavigation();
@@ -48,7 +48,7 @@ function animateCardsIn() {
         setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
-        }, index * 100);
+        }, index * 50); // Faster animation
     });
 }
 

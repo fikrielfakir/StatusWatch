@@ -6,7 +6,7 @@ from models import Service
 from outage_detector import outage_detector
 
 class ServiceMonitor:
-    def __init__(self, check_interval=60):  # Check every 60 seconds
+    def __init__(self, check_interval=300):  # Check every 5 minutes
         self.check_interval = check_interval
         self.running = False
         self.thread = None
@@ -35,7 +35,7 @@ class ServiceMonitor:
                 time.sleep(self.check_interval)
             except Exception as e:
                 logging.error(f"Error in monitoring loop: {e}")
-                time.sleep(5)  # Short delay before retrying
+                time.sleep(30)  # Short delay before retrying
     
     def _check_all_services(self):
         """Enhanced service checking with anomaly detection"""

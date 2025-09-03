@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('reportForm').addEventListener('submit', handleReportSubmit);
     document.getElementById('getLocationBtn').addEventListener('click', getUserLocation);
     
-    // Refresh data every 30 seconds
+    // Refresh data every 2 minutes to reduce server load
     setInterval(() => {
         loadReports();
         loadStatistics();
         updateChart();
-    }, 30000);
+    }, 120000);
 });
 
 function initializeMap() {
