@@ -3,7 +3,6 @@ import logging
 from datetime import datetime, timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO
 from flask_login import LoginManager
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -16,7 +15,6 @@ class Base(DeclarativeBase):
     pass
 
 db = SQLAlchemy(model_class=Base)
-socketio = SocketIO(cors_allowed_origins="*", async_mode='gevent', logger=False, engineio_logger=False)
 login_manager = LoginManager()
 
 # Create the app
@@ -43,7 +41,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Disable to save memory a
 
 # Initialize extensions
 db.init_app(app)
-socketio.init_app(app, async_mode='gevent', cors_allowed_origins="*")
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 
@@ -153,4 +150,4 @@ def load_user(user_id):
     return models.User.query.get(int(user_id))
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

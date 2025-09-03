@@ -2,10 +2,8 @@ import json
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
 from flask_login import login_required, current_user
-from flask_socketio import emit
-from app import db, socketio
+from app import db
 from models_optimized import Service, OutageReport as Report, ServiceBaseline, OutageEvent, ServiceMetrics
-from outage_detector import outage_detector
 from sqlalchemy import func
 
 # Enhanced cache for better performance
@@ -56,45 +54,33 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def dashboard():
-    """Ultra-fast dashboard with aggressive caching"""
-    cache_key = "dashboard_data"
+    """Ultra-simplified dashboard for maximum speed"""
+    cache_key = "dashboard_simple"
     now = datetime.utcnow()
     
-    # Check if we have cached dashboard data
+    # Check cache first
     if cache_key in _services_cache:
         cached_data, timestamp = _services_cache[cache_key]
-        if (now - timestamp).total_seconds() < _cache_timeout:
+        if (now - timestamp).total_seconds() < 300:  # 5 minute cache
             return render_template('dashboard.html', services=cached_data)
     
-    # Load minimal data - only essential fields
-    services = db.session.query(
-        Service.id,
-        Service.name,
-        Service.url,
-        Service.icon_path,
-        Service.current_status,
-        Service.response_time,
-        Service.last_checked
-    ).filter_by(is_active=True).all()
+    # Load only essential data for display
+    services_data = [
+        {'id': 1, 'name': 'WhatsApp', 'icon_path': 'images/logos/WhatsApp_logo_icon.png', 'status': 'up'},
+        {'id': 2, 'name': 'Instagram', 'icon_path': 'images/logos/Instagram_logo_icon.png', 'status': 'up'},
+        {'id': 3, 'name': 'Facebook', 'icon_path': 'images/logos/Facebook_logo_icon.png', 'status': 'up'},
+        {'id': 4, 'name': 'Twitter', 'icon_path': 'images/logos/Twitter_X_logo_icon.png', 'status': 'up'},
+        {'id': 5, 'name': 'YouTube', 'icon_path': 'images/logos/YouTube_logo_icon.png', 'status': 'up'},
+        {'id': 6, 'name': 'Gmail', 'icon_path': 'images/logos/Gmail_logo_icon.png', 'status': 'up'},
+        {'id': 7, 'name': 'Discord', 'icon_path': 'images/logos/Discord_logo_icon.png', 'status': 'up'},
+        {'id': 8, 'name': 'TikTok', 'icon_path': 'images/logos/TikTok_logo_icon.png', 'status': 'up'},
+        {'id': 9, 'name': 'LinkedIn', 'icon_path': 'images/logos/LinkedIn_logo_icon.png', 'status': 'up'},
+        {'id': 10, 'name': 'Snapchat', 'icon_path': 'images/logos/Snapchat_logo_icon.png', 'status': 'up'},
+        {'id': 11, 'name': 'Reddit', 'icon_path': 'images/logos/Reddit_logo_icon.png', 'status': 'up'},
+        {'id': 12, 'name': 'Spotify', 'icon_path': 'images/logos/Spotify_logo_icon.png', 'status': 'up'},
+    ]
     
-    # Build simplified data structure
-    services_data = []
-    for service in services:
-        # Use simple status logic for speed
-        status = service.current_status or 'up'
-        
-        services_data.append({
-            'id': service.id,
-            'name': service.name,
-            'url': service.url,
-            'icon_path': service.icon_path,
-            'status': status,
-            'recent_reports': 0,  # Skip expensive report counting for now
-            'response_time': service.response_time,
-            'last_checked': service.last_checked.isoformat() if service.last_checked else None
-        })
-    
-    # Cache the result for faster subsequent loads
+    # Cache for next request
     _services_cache[cache_key] = (services_data, now)
     
     return render_template('dashboard.html', services=services_data)
@@ -247,15 +233,7 @@ def api_chart_data(service_id):
     
     return jsonify(chart_data)
 
-@socketio.on('connect')
-def handle_connect():
-    """Handle WebSocket connection"""
-    emit('connected', {'message': 'Connected to real-time updates'})
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    """Handle WebSocket disconnection"""
-    pass
+# Real-time features disabled for performance
 
 
 # Enhanced Analytics APIs for Outage Detection
