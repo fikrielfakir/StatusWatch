@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update status counts
     updateStatusCounts();
     
-    // Refresh data every 2 minutes to reduce server load
-    setInterval(refreshDashboard, 120000);
+    // Refresh data every 5 minutes to reduce server load
+    setInterval(refreshDashboard, 300000);
     
     // Add keyboard navigation
     addKeyboardNavigation();
@@ -48,7 +48,7 @@ function animateCardsIn() {
         setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
-        }, index * 50); // Faster animation
+        }, index * 30); // Even faster animation
     });
 }
 
@@ -67,7 +67,7 @@ function animateSearchPlaceholder() {
     setInterval(() => {
         currentIndex = (currentIndex + 1) % placeholders.length;
         searchInput.placeholder = placeholders[currentIndex];
-    }, 3000);
+    }, 4000); // Slower placeholder changes
 }
 
 function addHoverEffects() {

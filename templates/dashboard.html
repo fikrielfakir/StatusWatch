@@ -33,7 +33,10 @@
                         {% if service.icon_path %}
                         <img src="{{ url_for('static', filename=service.icon_path) }}" 
                              alt="{{ service.name }}" 
-                             class="service-icon-img">
+                             class="service-icon-img"
+                             loading="lazy"
+                             width="30" 
+                             height="30">
                         {% else %}
                         <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                         {% endif %}
@@ -79,7 +82,10 @@
                             {% if service.icon_path %}
                             <img src="{{ url_for('static', filename=service.icon_path) }}" 
                                  alt="{{ service.name }}" 
-                                 class="service-icon-img">
+                                 class="service-icon-img"
+                                 loading="lazy"
+                                 width="30" 
+                                 height="30">
                             {% else %}
                             <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                             {% endif %}
@@ -107,7 +113,10 @@
                                     {% if service.icon_path %}
                                     <img src="{{ url_for('static', filename=service.icon_path) }}" 
                                          alt="{{ service.name }}" 
-                                         class="service-icon-img">
+                                         class="service-icon-img"
+                                         loading="lazy"
+                                         width="30" 
+                                         height="30">
                                     {% else %}
                                     <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                                     {% endif %}

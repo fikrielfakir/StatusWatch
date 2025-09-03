@@ -4,27 +4,86 @@ from flask import Blueprint, render_template, request, jsonify, flash, redirect,
 from flask_login import login_required, current_user
 from flask_socketio import emit
 from app import db, socketio
-from models import Service, Report, ServiceBaseline, OutageEvent, ServiceMetrics
+from models_optimized import Service, OutageReport as Report, ServiceBaseline, OutageEvent, ServiceMetrics
 from outage_detector import outage_detector
 from sqlalchemy import func
+
+# Simple cache for service status (in-memory for demo)
+_status_cache = {}
+_cache_timeout = 60  # 1 minute cache
+
+def get_cached_service_status(service):
+    """Get service status with simple caching to reduce DB load"""
+    cache_key = f"status_{service.id}"
+    now = datetime.utcnow()
+    
+    # Check cache
+    if cache_key in _status_cache:
+        cached_data, timestamp = _status_cache[cache_key]
+        if (now - timestamp).total_seconds() < _cache_timeout:
+            return cached_data
+    
+    # Calculate status (simplified version of get_status_with_anomaly)
+    status = 'up'  # default
+    
+    # Use monitoring data if recent
+    if service.current_status and service.last_checked:
+        # Handle timezone-aware vs timezone-naive datetime comparison
+        if service.last_checked.tzinfo is not None:
+            from datetime import timezone
+            now_utc = now.replace(tzinfo=timezone.utc)
+            time_since_check = now_utc - service.last_checked
+        else:
+            time_since_check = now - service.last_checked
+        
+        if time_since_check.total_seconds() < 300:  # 5 minutes
+            status = service.current_status
+            
+            # Check for ongoing outages
+            ongoing_outage = next((event for event in service.outage_events if event.status == 'ongoing'), None)
+            if ongoing_outage:
+                if ongoing_outage.severity == 'critical':
+                    status = 'down'
+                elif ongoing_outage.severity in ['major', 'minor']:
+                    status = 'issues' if status == 'up' else status
+    
+    # Cache the result
+    _status_cache[cache_key] = (status, now)
+    return status
 
 bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def dashboard():
-    """Main dashboard showing all services and their status"""
-    services = Service.query.all()
-    services_data = []
+    """Main dashboard showing all services and their status - optimized version"""
+    # Bulk load services with minimal queries
+    services = Service.query.filter_by(is_active=True).all()
     
+    # Pre-calculate report counts for all services in one query
+    from datetime import datetime, timedelta
+    cutoff = datetime.utcnow() - timedelta(hours=24)
+    
+    report_counts = dict(
+        db.session.query(
+            Report.service_id,
+            func.count(Report.id)
+        ).filter(
+            Report.created_at >= cutoff
+        ).group_by(Report.service_id).all()
+    )
+    
+    services_data = []
     for service in services:
-        status = service.get_status()
-        recent_count = service.get_recent_reports_count()
+        # Use cached status logic
+        status = get_cached_service_status(service)
+        recent_count = report_counts.get(service.id, 0)
+        
         services_data.append({
             'id': service.id,
             'name': service.name,
             'url': service.url,
             'icon_path': service.icon_path,
-            'status': service.get_status_with_anomaly(),  # Use enhanced status
+            'status': status,
             'recent_reports': recent_count,
             'response_time': service.response_time,
             'last_checked': service.last_checked.isoformat() if service.last_checked else None
@@ -48,15 +107,28 @@ def service_detail(service_id):
 
 @bp.route('/api/services')
 def api_services():
-    """API endpoint to get all services"""
-    services = Service.query.all()
+    """API endpoint to get all services - optimized"""
+    services = Service.query.filter_by(is_active=True).all()
+    
+    # Pre-calculate report counts for all services
+    cutoff = datetime.utcnow() - timedelta(hours=24)
+    report_counts = dict(
+        db.session.query(
+            Report.service_id,
+            func.count(Report.id)
+        ).filter(
+            Report.created_at >= cutoff
+        ).group_by(Report.service_id).all()
+    )
+    
     return jsonify([{
         'id': service.id,
         'name': service.name,
         'url': service.url,
         'icon_path': service.icon_path,
-        'status': service.get_status_with_anomaly(),  # Use enhanced status
-        'recent_reports': service.get_recent_reports_count()
+        'status': get_cached_service_status(service),
+        'recent_reports': report_counts.get(service.id, 0),
+        'response_time': service.response_time
     } for service in services])
 
 @bp.route('/api/services', methods=['POST'])
