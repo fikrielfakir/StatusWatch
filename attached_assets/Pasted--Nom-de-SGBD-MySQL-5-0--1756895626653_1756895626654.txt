@@ -1,0 +1,219 @@
+/*==============================================================*/
+/* Nom de SGBD :  MySQL 5.0                                     */
+/* Date de cr�ation :  5/12/2022 2:56:25 PM                     */
+/*==============================================================*/
+
+
+drop table if exists ChannelAccess;
+
+drop index COMMENT_FK on Comment;
+
+drop table if exists Comment;
+
+drop index REPORT_FK on Down;
+
+drop index DETECT_FK on Down;
+
+drop table if exists Down;
+
+drop index FAVORITED_FK on Favorite;
+
+drop index SELECTSERVICE_FK on Favorite;
+
+drop table if exists Favorite;
+
+drop index ROOTING_FK on Service;
+
+drop table if exists Service;
+
+drop index SUBTYPING_FK on SubType;
+
+drop table if exists SubType;
+
+drop table if exists Type;
+
+drop table if exists "User";
+
+drop index CHOSECHANNEL_FK2 on choseChannel;
+
+drop index CHOSECHANNEL_FK on choseChannel;
+
+drop table if exists choseChannel;
+
+/*==============================================================*/
+/* Table : ChannelAccess                                        */
+/*==============================================================*/
+create table ChannelAccess
+(
+   idChannel            int not null,
+   name                 varchar(254),
+   primary key (idChannel)
+);
+
+/*==============================================================*/
+/* Table : Comment                                              */
+/*==============================================================*/
+create table Comment
+(
+   idComment            int not null,
+   idUser               int not null,
+   time                 date,
+   comment              varchar(254),
+   service              varchar(254),
+   primary key (idComment)
+);
+
+/*==============================================================*/
+/* Index : COMMENT_FK                                           */
+/*==============================================================*/
+create index COMMENT_FK on Comment
+(
+   idUser
+);
+
+/*==============================================================*/
+/* Table : Down                                                 */
+/*==============================================================*/
+create table Down
+(
+   idDown               int not null,
+   idService            int not null,
+   idUser               int,
+   time                 date,
+   country              varchar(254),
+   source               varchar(254),
+   city                 varchar(254),
+   primary key (idDown)
+);
+
+/*==============================================================*/
+/* Index : DETECT_FK                                            */
+/*==============================================================*/
+create index DETECT_FK on Down
+(
+   idService
+);
+
+/*==============================================================*/
+/* Index : REPORT_FK                                            */
+/*==============================================================*/
+create index REPORT_FK on Down
+(
+   idUser
+);
+
+/*==============================================================*/
+/* Table : Favorite                                             */
+/*==============================================================*/
+create table Favorite
+(
+   idFavorite           int not null,
+   idUser               int not null,
+   idService            int,
+   name                 varchar(254),
+   primary key (idFavorite)
+);
+
+/*==============================================================*/
+/* Index : SELECTSERVICE_FK                                     */
+/*==============================================================*/
+create index SELECTSERVICE_FK on Favorite
+(
+   idService
+);
+
+/*==============================================================*/
+/* Index : FAVORITED_FK                                         */
+/*==============================================================*/
+create index FAVORITED_FK on Favorite
+(
+   idUser
+);
+
+/*==============================================================*/
+/* Table : Service                                              */
+/*==============================================================*/
+create table Service
+(
+   idService            int not null,
+   idType               int not null,
+   name                 varchar(254),
+   description          varchar(254),
+   logo                 blob,
+   company              varchar(254),
+   primary key (idService)
+);
+
+/*==============================================================*/
+/* Index : ROOTING_FK                                           */
+/*==============================================================*/
+create index ROOTING_FK on Service
+(
+   idType
+);
+
+/*==============================================================*/
+/* Table : SubType                                              */
+/*==============================================================*/
+create table SubType
+(
+   idSubtype            int not null,
+   idType               int not null,
+   subTypeName          varchar(254),
+   primary key (idSubtype)
+);
+
+/*==============================================================*/
+/* Index : SUBTYPING_FK                                         */
+/*==============================================================*/
+create index SUBTYPING_FK on SubType
+(
+   idType
+);
+
+/*==============================================================*/
+/* Table : Type                                                 */
+/*==============================================================*/
+create table Type
+(
+   idType               int not null,
+   typeName             varchar(254),
+   primary key (idType)
+);
+
+/*==============================================================*/
+/* Table : User                                                 */
+/*==============================================================*/
+create table "User"
+(
+   idUser               int not null,
+   name                 varchar(254),
+   primary key (idUser)
+);
+
+/*==============================================================*/
+/* Table : choseChannel                                         */
+/*==============================================================*/
+create table choseChannel
+(
+   idService            int not null,
+   idChannel            int not null,
+   primary key (idService, idChannel)
+);
+
+/*==============================================================*/
+/* Index : CHOSECHANNEL_FK                                      */
+/*==============================================================*/
+create index CHOSECHANNEL_FK on choseChannel
+(
+   idService
+);
+
+/*==============================================================*/
+/* Index : CHOSECHANNEL_FK2                                     */
+/*==============================================================*/
+create index CHOSECHANNEL_FK2 on choseChannel
+(
+   idChannel
+);
+

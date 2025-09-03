@@ -57,28 +57,68 @@ with app.app_context():
         db.session.commit()
         logging.info("Default admin user created: admin/admin123")
     
+    # Create default service types if none exist
+    if hasattr(models, 'ServiceType') and models.ServiceType.query.count() == 0:
+        default_types = [
+            {'name': 'Social Media', 'description': 'Social networking platforms', 'icon_class': 'fas fa-users'},
+            {'name': 'Email & Communication', 'description': 'Email and messaging services', 'icon_class': 'fas fa-envelope'},
+            {'name': 'Entertainment', 'description': 'Video and music streaming', 'icon_class': 'fas fa-play'},
+        ]
+        
+        for type_data in default_types:
+            service_type = models.ServiceType(
+                name=type_data['name'],
+                description=type_data['description'],
+                icon_class=type_data.get('icon_class')
+            )
+            db.session.add(service_type)
+        
+        db.session.commit()
+        logging.info("Default service types created")
+    
+    # Get default service type
+    social_media_type = None
+    email_type = None
+    entertainment_type = None
+    
+    if hasattr(models, 'ServiceType'):
+        social_media_type = models.ServiceType.query.filter_by(name='Social Media').first()
+        email_type = models.ServiceType.query.filter_by(name='Email & Communication').first()
+        entertainment_type = models.ServiceType.query.filter_by(name='Entertainment').first()
+    
     # Create default services if none exist
     if models.Service.query.count() == 0:
         default_services = [
-            {'name': 'WhatsApp', 'url': 'https://whatsapp.com', 'icon_path': 'images/logos/WhatsApp_logo_icon.png'},
-            {'name': 'Instagram', 'url': 'https://instagram.com', 'icon_path': 'images/logos/Instagram_logo_icon.png'},
-            {'name': 'Facebook', 'url': 'https://facebook.com', 'icon_path': 'images/logos/Facebook_logo_icon.png'},
-            {'name': 'Twitter', 'url': 'https://twitter.com', 'icon_path': 'images/logos/Twitter_X_logo_icon.png'},
-            {'name': 'YouTube', 'url': 'https://youtube.com', 'icon_path': 'images/logos/YouTube_logo_icon.png'},
-            {'name': 'Gmail', 'url': 'https://gmail.com', 'icon_path': 'images/logos/Gmail_logo_icon.png'},
-            {'name': 'Discord', 'url': 'https://discord.com', 'icon_path': 'images/logos/Discord_logo_icon.png'},
-            {'name': 'TikTok', 'url': 'https://tiktok.com', 'icon_path': 'images/logos/TikTok_logo_icon.png'},
-            {'name': 'LinkedIn', 'url': 'https://linkedin.com', 'icon_path': 'images/logos/LinkedIn_logo_icon.png'},
-            {'name': 'Snapchat', 'url': 'https://snapchat.com', 'icon_path': 'images/logos/Snapchat_logo_icon.png'},
-            {'name': 'Reddit', 'url': 'https://reddit.com', 'icon_path': 'images/logos/Reddit_logo_icon.png'},
-            {'name': 'Spotify', 'url': 'https://spotify.com', 'icon_path': 'images/logos/Spotify_logo_icon.png'},
+            {'name': 'WhatsApp', 'url': 'https://whatsapp.com', 'icon_path': 'images/logos/WhatsApp_logo_icon.png', 'type': 'social'},
+            {'name': 'Instagram', 'url': 'https://instagram.com', 'icon_path': 'images/logos/Instagram_logo_icon.png', 'type': 'social'},
+            {'name': 'Facebook', 'url': 'https://facebook.com', 'icon_path': 'images/logos/Facebook_logo_icon.png', 'type': 'social'},
+            {'name': 'Twitter', 'url': 'https://twitter.com', 'icon_path': 'images/logos/Twitter_X_logo_icon.png', 'type': 'social'},
+            {'name': 'YouTube', 'url': 'https://youtube.com', 'icon_path': 'images/logos/YouTube_logo_icon.png', 'type': 'entertainment'},
+            {'name': 'Gmail', 'url': 'https://gmail.com', 'icon_path': 'images/logos/Gmail_logo_icon.png', 'type': 'email'},
+            {'name': 'Discord', 'url': 'https://discord.com', 'icon_path': 'images/logos/Discord_logo_icon.png', 'type': 'social'},
+            {'name': 'TikTok', 'url': 'https://tiktok.com', 'icon_path': 'images/logos/TikTok_logo_icon.png', 'type': 'entertainment'},
+            {'name': 'LinkedIn', 'url': 'https://linkedin.com', 'icon_path': 'images/logos/LinkedIn_logo_icon.png', 'type': 'social'},
+            {'name': 'Snapchat', 'url': 'https://snapchat.com', 'icon_path': 'images/logos/Snapchat_logo_icon.png', 'type': 'social'},
+            {'name': 'Reddit', 'url': 'https://reddit.com', 'icon_path': 'images/logos/Reddit_logo_icon.png', 'type': 'social'},
+            {'name': 'Spotify', 'url': 'https://spotify.com', 'icon_path': 'images/logos/Spotify_logo_icon.png', 'type': 'entertainment'},
         ]
         
         for service_data in default_services:
+            # Determine type_id based on service type
+            type_id = 1  # Default fallback
+            if hasattr(models, 'ServiceType'):
+                if service_data.get('type') == 'social' and social_media_type:
+                    type_id = social_media_type.id
+                elif service_data.get('type') == 'email' and email_type:
+                    type_id = email_type.id
+                elif service_data.get('type') == 'entertainment' and entertainment_type:
+                    type_id = entertainment_type.id
+            
             service = models.Service(
                 name=service_data['name'],
                 url=service_data['url'],
-                icon_path=service_data.get('icon_path')
+                icon_path=service_data.get('icon_path'),
+                type_id=type_id
             )
             db.session.add(service)
         

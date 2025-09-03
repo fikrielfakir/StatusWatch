@@ -41,8 +41,8 @@ def service_detail(service_id):
     cutoff = datetime.utcnow() - timedelta(hours=24)
     reports = Report.query.filter(
         Report.service_id == service_id,
-        Report.timestamp >= cutoff
-    ).order_by(Report.timestamp.desc()).all()
+        Report.created_at >= cutoff
+    ).order_by(Report.created_at.desc()).all()
     
     return render_template('service_detail.html', service=service, reports=reports)
 
@@ -92,8 +92,8 @@ def api_reports(service_id):
     
     reports = Report.query.filter(
         Report.service_id == service_id,
-        Report.timestamp >= cutoff
-    ).order_by(Report.timestamp.desc()).all()
+        Report.created_at >= cutoff
+    ).order_by(Report.created_at.desc()).all()
     
     return jsonify([report.to_dict() for report in reports])
 
@@ -114,7 +114,7 @@ def api_submit_report():
     recent_cutoff = datetime.utcnow() - timedelta(minutes=5)
     recent_reports = Report.query.filter(
         Report.user_ip == user_ip,
-        Report.timestamp >= recent_cutoff
+        Report.created_at >= recent_cutoff
     ).count()
     
     if recent_reports >= 3:
@@ -142,13 +142,13 @@ def api_chart_data(service_id):
     
     # Group reports by hour using PostgreSQL date_trunc
     reports = db.session.query(
-        func.date_trunc('hour', Report.timestamp).label('hour'),
+        func.date_trunc('hour', Report.created_at).label('hour'),
         func.count(Report.id).label('count')
     ).filter(
         Report.service_id == service_id,
-        Report.timestamp >= cutoff
+        Report.created_at >= cutoff
     ).group_by(
-        func.date_trunc('hour', Report.timestamp)
+        func.date_trunc('hour', Report.created_at)
     ).all()
     
     # Create hourly data structure
@@ -257,7 +257,7 @@ def api_analytics_overview():
         status_counts[status] = status_counts.get(status, 0) + 1
     
     # Total reports in timeframe
-    total_reports = Report.query.filter(Report.timestamp >= cutoff).count()
+    total_reports = Report.query.filter(Report.created_at >= cutoff).count()
     
     # Active outages
     active_outages = OutageEvent.query.filter_by(status='ongoing').count()
