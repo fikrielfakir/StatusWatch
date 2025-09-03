@@ -167,6 +167,9 @@ function updateStatusCounts() {
 async function refreshDashboard() {
     try {
         const response = await fetch('/api/services');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const services = await response.json();
         
         services.forEach(service => {
@@ -186,11 +189,13 @@ async function refreshDashboard() {
                 }
                 
                 // Update reports count with response time
-                let reportText = `${service.recent_reports} reports in last 24h`;
-                if (service.response_time) {
-                    reportText += ` • ${Math.round(service.response_time)}ms response`;
+                if (reportsCount) {
+                    let reportText = `${service.recent_reports} reports in last 24h`;
+                    if (service.response_time) {
+                        reportText += ` • ${Math.round(service.response_time)}ms response`;
+                    }
+                    reportsCount.textContent = reportText;
                 }
-                reportsCount.textContent = reportText;
                 
                 // Update status text
                 if (statusText) {
@@ -289,11 +294,13 @@ socket.on('dashboard_refresh', function(services) {
             }
             
             // Update reports count with response time
-            let reportText = `${service.recent_reports} reports in last 24h`;
-            if (service.response_time) {
-                reportText += ` • ${Math.round(service.response_time)}ms response`;
+            if (reportsCount) {
+                let reportText = `${service.recent_reports} reports in last 24h`;
+                if (service.response_time) {
+                    reportText += ` • ${Math.round(service.response_time)}ms response`;
+                }
+                reportsCount.textContent = reportText;
             }
-            reportsCount.textContent = reportText;
         }
     });
     

@@ -58,8 +58,65 @@
             <!-- 24 Hour Chart Section -->
             <div class="mb-5">
                 <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">Reports in the Last 24 Hours</h5>
+                    </div>
                     <div class="card-body" style="min-height: 350px; padding: 2rem;">
                         <canvas id="reportsChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-5">
+                <div class="col-md-4 mb-3">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body">
+                            <h4 class="text-primary" id="lastHourCount">0</h4>
+                            <p class="text-muted mb-0">Last Hour</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body">
+                            <h4 class="text-warning" id="last6HourCount">0</h4>
+                            <p class="text-muted mb-0">Last 6 Hours</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body">
+                            <h4 class="text-danger" id="last24HourCount">0</h4>
+                            <p class="text-muted mb-0">Last 24 Hours</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Section -->
+            <div class="mb-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">Report Locations</h5>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div id="map" style="height: 400px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Reports -->
+            <div class="mb-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-0">
+                        <h5 class="mb-0">Recent Reports</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentReports">
+                            <p class="text-muted">Loading reports...</p>
+                        </div>
                     </div>
                 </div>
             </div>

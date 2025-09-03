@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
     pass
 
 db = SQLAlchemy(model_class=Base)
-socketio = SocketIO(cors_allowed_origins="*", async_mode='threading', logger=False, engineio_logger=False)
+socketio = SocketIO(cors_allowed_origins="*", async_mode='gevent', logger=False, engineio_logger=False)
 login_manager = LoginManager()
 
 # Create the app
@@ -32,7 +32,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 
 # Initialize extensions
 db.init_app(app)
-socketio.init_app(app, async_mode='threading', cors_allowed_origins="*")
+socketio.init_app(app, async_mode='gevent', cors_allowed_origins="*")
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 

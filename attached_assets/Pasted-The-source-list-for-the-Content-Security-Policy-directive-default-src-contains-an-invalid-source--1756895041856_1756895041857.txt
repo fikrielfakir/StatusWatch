@@ -1,0 +1,95 @@
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+/~:1 The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+/~:1 The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+/~:1 The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+VM52 dashboard.js:296 Uncaught (in promise) TypeError: Cannot set properties of null (setting 'textContent')
+    at VM52 dashboard.js:296:38
+    at Array.forEach (<anonymous>)
+    at a.<anonymous> (VM52 dashboard.js:276:14)
+    at U.emit (VM21 socket.io.min.js:6:8548)
+    at a.value (VM21 socket.io.min.js:6:40307)
+    at a.value (VM21 socket.io.min.js:6:40011)
+    at a.value (VM21 socket.io.min.js:6:39665)
+    at U.emit (VM21 socket.io.min.js:6:8548)
+    at VM21 socket.io.min.js:6:46754
+VM22 eruda.js:2 WebSocket connection to 'wss://9b7e3241-7543-4cf8-83e0-1dfde34a4410-00-1ggbd6ccoqt3t.kirk.replit.dev/socket.io/?EIO=4&transport=websocket&sid=b9VOFYHWtR1Ar7oSAAAC' failed: Invalid frame header
+t @ VM22 eruda.js:2
+9b7e3241-7543-4cf8-83e0-1dfde34a4410-00-1ggbd6ccoqt3t.kirk.replit.dev/socket.io/?EIO=4&transport=polling&t=PaF6PNZ&sid=b9VOFYHWtR1Ar7oSAAAC:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+VM22 eruda.js:2 Error refreshing dashboard: TypeError: Cannot set properties of null (setting 'textContent')
+    at VM52 dashboard.js:193:42
+    at Array.forEach (<anonymous>)
+    at refreshDashboard (VM52 dashboard.js:172:18)
+Mt.forEach.n.<computed> @ VM22 eruda.js:2
+VM52 dashboard.js:296 Uncaught (in promise) TypeError: Cannot set properties of null (setting 'textContent')
+    at VM52 dashboard.js:296:38
+    at Array.forEach (<anonymous>)
+    at a.<anonymous> (VM52 dashboard.js:276:14)
+    at U.emit (VM21 socket.io.min.js:6:8548)
+    at a.value (VM21 socket.io.min.js:6:40307)
+    at a.value (VM21 socket.io.min.js:6:40011)
+    at a.value (VM21 socket.io.min.js:6:39665)
+    at U.emit (VM21 socket.io.min.js:6:8548)
+    at VM21 socket.io.min.js:6:46754
+VM22 eruda.js:2 WebSocket connection to 'wss://9b7e3241-7543-4cf8-83e0-1dfde34a4410-00-1ggbd6ccoqt3t.kirk.replit.dev/socket.io/?EIO=4&transport=websocket&sid=fsjlxM3nnqcuGP5zAAAA' failed: Invalid frame header
+t @ VM22 eruda.js:2
+socket.io/:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+VM22 eruda.js:2 Error refreshing dashboard: TypeError: Failed to fetch
+    at window.fetch (VM22 eruda.js:2:218642)
+    at Object.apply (VM24 injected.js:253:39)
+    at refreshDashboard (VM52 dashboard.js:169:32)
+Mt.forEach.n.<computed> @ VM22 eruda.js:2
+refreshDashboard @ VM52 dashboard.js:219
+Map.js:1092 Uncaught Error: Map container not found.
+_initContainer @ Map.js:1092
+initialize @ Map.js:136
+e @ Class.js:24
+t.map @ Map.js:1750
+initializeMap @ service-detail.js:27
+(anonymous) @ service-detail.js:8
