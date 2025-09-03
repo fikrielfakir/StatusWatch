@@ -2,7 +2,7 @@ modules = ["python-3.11", "web", "nodejs-20"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["iana-etc", "libmaxminddb", "openssl", "postgresql"]
+packages = ["iana-etc", "libev", "libmaxminddb", "openssl", "postgresql"]
 
 [deployment]
 deploymentTarget = "autoscale"
