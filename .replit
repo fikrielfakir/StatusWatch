@@ -2,7 +2,7 @@ modules = ["python-3.11", "web", "nodejs-20"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["iana-etc", "libev", "libmaxminddb", "openssl", "postgresql"]
+packages = ["glibcLocales", "iana-etc", "libev", "libmaxminddb", "openssl", "postgresql"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -34,3 +34,4 @@ localPort = 5000
 externalPort = 80
 
 [agent]
+integrations = ["web_scraper==1.0.0"]

@@ -6,6 +6,16 @@ from app import db
 from models_optimized import Service, OutageReport as Report, ServiceBaseline, OutageEvent, ServiceMetrics
 from sqlalchemy import func
 
+# Import new monitoring components
+try:
+    from integration_service import start_integrated_monitoring, get_monitoring_status
+    from external_monitors import monitor_service_external
+    from anomaly_detection import analyze_service_anomaly
+    MONITORING_AVAILABLE = True
+except ImportError as e:
+    MONITORING_AVAILABLE = False
+    print(f"Advanced monitoring not available: {e}")
+
 # Enhanced cache for better performance
 _status_cache = {}
 _services_cache = {}
@@ -311,7 +321,7 @@ def api_analytics_overview():
     services = Service.query.all()
     status_counts = {'up': 0, 'issues': 0, 'down': 0}
     for service in services:
-        status = service.get_status_with_anomaly()
+        status = service.current_status or 'up'
         status_counts[status] = status_counts.get(status, 0) + 1
     
     # Total reports in timeframe
@@ -329,3 +339,87 @@ def api_analytics_overview():
             'active_outages': active_outages
         }
     })
+
+# New Advanced Monitoring Endpoints
+
+@bp.route('/api/monitoring/status')
+def api_monitoring_status():
+    """Get integrated monitoring system status"""
+    if not MONITORING_AVAILABLE:
+        return jsonify({'error': 'Advanced monitoring not available'}), 503
+    
+    try:
+        status = get_monitoring_status()
+        return jsonify(status)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/api/monitoring/external/<service_name>')
+def api_external_monitoring(service_name):
+    """Get external monitoring data for a service"""
+    if not MONITORING_AVAILABLE:
+        return jsonify({'error': 'External monitoring not available'}), 503
+    
+    try:
+        # Get credentials from environment or config
+        credentials = {}  # Would be populated from secure storage
+        result = monitor_service_external(service_name, credentials)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/api/monitoring/anomaly/<int:service_id>')
+def api_anomaly_detection(service_id):
+    """Run anomaly detection for a service"""
+    if not MONITORING_AVAILABLE:
+        return jsonify({'error': 'Anomaly detection not available'}), 503
+    
+    try:
+        service = Service.query.get_or_404(service_id)
+        
+        # Get recent reports
+        cutoff = datetime.utcnow() - timedelta(hours=1)
+        recent_reports = Report.query.filter(
+            Report.service_id == service_id,
+            Report.created_at >= cutoff
+        ).count()
+        
+        # Run anomaly detection
+        result = analyze_service_anomaly(
+            service_id=service_id,
+            report_count=float(recent_reports),
+            response_time=float(service.response_time or 200)
+        )
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/api/monitoring/start', methods=['POST'])
+@login_required
+def api_start_monitoring():
+    """Start the integrated monitoring service"""
+    if not current_user.is_admin:
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    if not MONITORING_AVAILABLE:
+        return jsonify({'error': 'Monitoring system not available'}), 503
+    
+    try:
+        data = request.get_json() or {}
+        credentials = data.get('credentials', {})
+        
+        service = start_integrated_monitoring(credentials)
+        return jsonify({'message': 'Monitoring started successfully', 'status': 'running'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/monitoring')
+@login_required
+def monitoring_dashboard():
+    """Advanced monitoring dashboard"""
+    if not current_user.is_admin:
+        flash('Admin access required', 'error')
+        return redirect(url_for('main.dashboard'))
+    
+    return render_template('monitoring.html')

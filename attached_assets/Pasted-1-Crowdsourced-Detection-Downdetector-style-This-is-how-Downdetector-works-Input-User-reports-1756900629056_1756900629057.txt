@@ -1,0 +1,83 @@
+1. Crowdsourced Detection (Downdetector style)
+
+This is how Downdetector works.
+
+Input: User reports ("I can’t login", "No connection").
+
+Logic:
+
+Collect reports over time (e.g., 5-minute window).
+
+Compare against baseline (expected # of reports for that time/day).
+
+If reports > threshold (e.g., 3× baseline), mark outage detected.
+
+Advantages: Doesn’t need direct access to the service, quick detection.
+
+Disadvantages: Only works when many users report issues.
+
+👉 Example pseudo-code:
+
+def is_outage(service, reports, baseline):
+    threshold = baseline * 3  # anomaly factor
+    if reports >= threshold:
+        return True   # Service likely down
+    return False
+
+2. Active Monitoring (DevOps / SRE style)
+
+Used by infrastructure teams, sometimes combined with user reports.
+
+Ping / Heartbeat checks: System sends periodic requests (HTTP GET, ping, TCP connect).
+
+If response fails (timeout, error codes, high latency) several times → service marked down.
+
+Synthetic transactions: Simulate login, API calls, DB queries.
+
+Threshold logic:
+
+If >N% of checks fail in X minutes → outage.
+
+👉 Example pseudo-code:
+
+import requests, time
+
+def check_service(url):
+    try:
+        r = requests.get(url, timeout=5)
+        return r.status_code == 200
+    except:
+        return False
+
+failures = 0
+for i in range(5):
+    if not check_service("https://example.com"):
+        failures += 1
+    time.sleep(30)
+
+if failures >= 3:  # 3 out of 5 checks failed
+    print("Service DOWN")
+else:
+    print("Service UP")
+
+3. Hybrid Model (Best Practice)
+
+Crowdsourced reports = detect perceived outage by users.
+
+Active monitoring = detect actual service failures (objective checks).
+
+Combine them:
+
+If both spike at the same time → confirmed outage.
+
+If only one side spikes → maybe false alarm, localized ISP issue, or single-region problem.
+
+✅ Summary:
+
+Outage is detected when reports or checks exceed a baseline/threshold for failures.
+
+Crowdsourcing = relies on user complaints.
+
+Monitoring = relies on automated probes (pings, API calls, synthetic logins).
+
+Together, they give a robust picture of whether a service is down or just experiencing local/temporary issues.

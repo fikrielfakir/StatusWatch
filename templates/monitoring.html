@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+
+{% block title %}Advanced Monitoring - DownDetector Clone{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Header -->
+        <div class="col-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3">Advanced Monitoring Dashboard</h1>
+                <div>
+                    <button class="btn btn-success" id="startMonitoring">
+                        <i data-feather="play"></i> Start Monitoring
+                    </button>
+                    <button class="btn btn-secondary" id="refreshStatus">
+                        <i data-feather="refresh-cw"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- System Status -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">System Status</h5>
+                </div>
+                <div class="card-body">
+                    <div id="systemStatus">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="status-indicator me-2" id="monitoringStatus"></div>
+                            <span>Monitoring Service</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="status-indicator me-2" id="streamStatus"></div>
+                            <span>Stream Processing</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="status-indicator me-2" id="anomalyStatus"></div>
+                            <span>Anomaly Detection</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator me-2" id="externalStatus"></div>
+                            <span>External APIs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Overview -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Service Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="metric">
+                                <div class="metric-value text-success" id="servicesUp">0</div>
+                                <div class="metric-label">Up</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="metric">
+                                <div class="metric-value text-warning" id="servicesIssues">0</div>
+                                <div class="metric-label">Issues</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="metric">
+                                <div class="metric-value text-danger" id="servicesDown">0</div>
+                                <div class="metric-label">Down</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="metric">
+                                <div class="metric-value text-info" id="activeOutages">0</div>
+                                <div class="metric-label">Active Outages</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Services List -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Services</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Last Check</th>
+                                    <th>Response Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="servicesTable">
+                                <!-- Services will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Events -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Recent Events</h5>
+                </div>
+                <div class="card-body">
+                    <div id="recentEvents">
+                        <!-- Events will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Sources -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">External Sources Integration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <div class="source-status" id="twitterStatus">
+                                    <i data-feather="twitter" class="mb-2"></i>
+                                    <div>Twitter API</div>
+                                    <small class="text-muted">Not configured</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <div class="source-status" id="googleStatus">
+                                    <i data-feather="chrome" class="mb-2"></i>
+                                    <div>Google APIs</div>
+                                    <small class="text-muted">Not configured</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <div class="source-status" id="redditStatus">
+                                    <i data-feather="message-circle" class="mb-2"></i>
+                                    <div>Reddit Scraping</div>
+                                    <small class="text-muted">Active</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <div class="source-status" id="downdetectorStatus">
+                                    <i data-feather="trending-down" class="mb-2"></i>
+                                    <div>DownDetector</div>
+                                    <small class="text-muted">Active</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configuration Modal -->
+<div class="modal fade" id="configModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configure External APIs</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="configForm">
+                    <div class="mb-3">
+                        <label class="form-label">Twitter API Key</label>
+                        <input type="password" class="form-control" name="twitter_api_key" placeholder="Enter Twitter API key">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Twitter API Secret</label>
+                        <input type="password" class="form-control" name="twitter_api_secret" placeholder="Enter Twitter API secret">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Google API Key</label>
+                        <input type="password" class="form-control" name="google_api_key" placeholder="Enter Google API key">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveConfig">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Monitoring Dashboard JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    let refreshInterval;
+    
+    // Initialize
+    loadMonitoringStatus();
+    
+    // Event listeners
+    document.getElementById('startMonitoring').addEventListener('click', startMonitoring);
+    document.getElementById('refreshStatus').addEventListener('click', loadMonitoringStatus);
+    document.getElementById('saveConfig').addEventListener('click', saveConfiguration);
+    
+    // Auto-refresh every 30 seconds
+    refreshInterval = setInterval(loadMonitoringStatus, 30000);
+    
+    async function loadMonitoringStatus() {
+        try {
+            const response = await fetch('/api/monitoring/status');
+            const data = await response.json();
+            
+            if (response.ok) {
+                updateDashboard(data);
+            } else {
+                showError(data.error || 'Failed to load monitoring status');
+            }
+        } catch (error) {
+            showError('Connection error: ' + error.message);
+        }
+    }
+    
+    function updateDashboard(data) {
+        // Update system status indicators
+        updateStatusIndicator('monitoringStatus', true);
+        updateStatusIndicator('streamStatus', true);
+        updateStatusIndicator('anomalyStatus', true);
+        updateStatusIndicator('externalStatus', data.total_services > 0);
+        
+        // Update service counts
+        const statuses = data.statuses || {};
+        document.getElementById('servicesUp').textContent = statuses.up || 0;
+        document.getElementById('servicesIssues').textContent = statuses.issues || 0;
+        document.getElementById('servicesDown').textContent = statuses.down || 0;
+        document.getElementById('activeOutages').textContent = data.active_outages || 0;
+        
+        // Update services table
+        updateServicesTable(data.services || []);
+    }
+    
+    function updateStatusIndicator(elementId, isUp) {
+        const indicator = document.getElementById(elementId);
+        indicator.className = `status-indicator me-2 ${isUp ? 'bg-success' : 'bg-danger'}`;
+    }
+    
+    function updateServicesTable(services) {
+        const tbody = document.getElementById('servicesTable');
+        tbody.innerHTML = '';
+        
+        services.forEach(service => {
+            const row = document.createElement('tr');
+            
+            const statusClass = service.status === 'up' ? 'success' : 
+                               service.status === 'issues' ? 'warning' : 'danger';
+            
+            row.innerHTML = `
+                <td>
+                    <strong>${service.name}</strong>
+                </td>
+                <td>
+                    <span class="badge bg-${statusClass}">${service.status}</span>
+                </td>
+                <td>
+                    <small>${service.last_checked ? new Date(service.last_checked).toLocaleString() : 'Never'}</small>
+                </td>
+                <td>
+                    ${service.response_time ? service.response_time + 'ms' : 'N/A'}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="checkService(${service.id})">
+                        <i data-feather="activity"></i> Check
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        // Re-initialize Feather icons
+        feather.replace();
+    }
+    
+    async function startMonitoring() {
+        try {
+            const response = await fetch('/api/monitoring/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    credentials: {} // Would include API keys from secure storage
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showSuccess('Monitoring started successfully');
+                loadMonitoringStatus();
+            } else {
+                showError(data.error || 'Failed to start monitoring');
+            }
+        } catch (error) {
+            showError('Error starting monitoring: ' + error.message);
+        }
+    }
+    
+    function saveConfiguration() {
+        // Implementation for saving API credentials
+        showSuccess('Configuration saved (feature coming soon)');
+        bootstrap.Modal.getInstance(document.getElementById('configModal')).hide();
+    }
+    
+    function showSuccess(message) {
+        // Simple success notification
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        alert.style.top = '20px';
+        alert.style.right = '20px';
+        alert.style.zIndex = '9999';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+            }
+        }, 5000);
+    }
+    
+    function showError(message) {
+        // Simple error notification
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-danger alert-dismissible fade show position-fixed';
+        alert.style.top = '20px';
+        alert.style.right = '20px';
+        alert.style.zIndex = '9999';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+            }
+        }, 5000);
+    }
+});
+
+// Global functions
+async function checkService(serviceId) {
+    try {
+        const response = await fetch(`/api/monitoring/anomaly/${serviceId}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+            console.log('Anomaly detection result:', data);
+            alert(`Anomaly detection complete. Anomaly detected: ${data.is_anomaly ? 'Yes' : 'No'}`);
+        } else {
+            alert('Error running anomaly detection: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
+</script>
+
+<style>
+.metric {
+    padding: 1rem;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.source-status {
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.source-status:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.source-status i {
+    font-size: 2rem;
+    color: #007bff;
+}
+</style>
+{% endblock %}
