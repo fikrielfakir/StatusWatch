@@ -3,204 +3,133 @@
 {% block title %}{{ service.name }} - DownDetector Clone{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Back Navigation -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none">
-                    <i data-feather="home" class="me-1"></i>Home
-                </a>
-            </li>
-            <li class="breadcrumb-item active">{{ service.name }}</li>
-        </ol>
-    </nav>
+<div class="container">
+    <!-- Service Header -->
+    <div class="text-center py-5">
+        {% if service.icon_path %}
+        <div class="mb-4">
+            <div class="service-icon d-inline-block" style="width: 80px; height: 80px; background: 
+                {% if service.name == 'Twitter' %}#1DA1F2
+                {% elif service.name == 'YouTube' %}#FF0000
+                {% elif service.name == 'TikTok' %}#000000
+                {% elif service.name == 'Instagram' %}#E4405F
+                {% elif service.name == 'Facebook' %}#1877F2
+                {% elif service.name == 'LinkedIn' %}#0077B5
+                {% elif service.name == 'WhatsApp' %}#25D366
+                {% elif service.name == 'Snapchat' %}#FFFC00
+                {% elif service.name == 'Discord' %}#5865F2
+                {% elif service.name == 'Reddit' %}#FF4500
+                {% elif service.name == 'Spotify' %}#1DB954
+                {% elif service.name == 'Gmail' %}#EA4335
+                {% else %}#5DADE2{% endif %}; border-radius: 16px;">
+                <img src="{{ url_for('static', filename=service.icon_path) }}" 
+                     alt="{{ service.name }} logo" 
+                     style="width: 40px; height: 40px; object-fit: contain; {% if service.name != 'Snapchat' %}filter: brightness(0) invert(1);{% endif %}">
+            </div>
+        </div>
+        {% endif %}
+        
+        <h1 style="font-size: 1.8rem; color: var(--text-dark); margin-bottom: 1rem;">{{ service.name }}</h1>
+        
+        <p class="text-muted mb-4" style="font-size: 1rem; max-width: 600px; margin: 0 auto;">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+            libero et velit interdum, ac aliquet odio mattis.
+        </p>
+        
+        <!-- Action Buttons -->
+        <div class="mb-5">
+            <button type="button" class="btn btn-danger me-2 mb-2" data-bs-toggle="modal" data-bs-target="#reportModal" style="border-radius: 5px;">
+                Signaler la panne
+            </button>
+            <button type="button" class="btn btn-danger me-2 mb-2" style="border-radius: 5px;">
+                Vérifier statut
+            </button>
+            <button type="button" class="btn btn-danger me-2 mb-2" style="border-radius: 5px;">
+                Signaler fiable
+            </button>
+            <button type="button" class="btn btn-secondary mb-2" style="border-radius: 5px;">
+                Autre chose
+            </button>
+        </div>
+    </div>
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <!-- Service Header -->
-            <div class="text-center mb-5">
-                {% if service.icon_path %}
-                <div class="mb-4">
-                    <img src="{{ url_for('static', filename=service.icon_path) }}" 
-                         alt="{{ service.name }} logo" 
-                         style="width: 120px; height: 120px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                </div>
-                {% endif %}
-                
-                <!-- Status Message -->
-                {% set status = service.get_status() %}
-                {% set recent_count = service.get_recent_reports_count() %}
-                
-                <h1 class="mb-4" style="font-size: 2.5rem; font-weight: 300; line-height: 1.2;">
-                    {% if status == 'up' and recent_count == 0 %}
-                        User reports indicate no current problems at {{ service.name }}
-                    {% elif status == 'up' %}
-                        {{ service.name }} is experiencing minor issues
-                    {% elif status == 'issues' %}
-                        Some users are experiencing issues with {{ service.name }}
-                    {% else %}
-                        {{ service.name }} is currently experiencing an outage
-                    {% endif %}
-                </h1>
-                
-                <!-- Star Rating -->
-                <div class="mb-4">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <div class="me-3">
-                            {% for i in range(5) %}
-                            <i data-feather="star" class="star-rating {% if i < 4 %}text-warning{% else %}text-muted{% endif %}" 
-                               style="width: 24px; height: 24px; fill: {% if i < 4 %}currentColor{% else %}none{% endif %};"></i>
-                            {% endfor %}
-                        </div>
-                        <small class="text-muted">
-                            How satisfied are you with {{ service.name }}?<br>
-                            Vote to express your opinion!
-                        </small>
-                    </div>
-                </div>
-                
-                <!-- Action Buttons -->
-                <div class="mb-5">
-                    <button type="button" class="btn btn-danger btn-lg me-3" data-bs-toggle="modal" data-bs-target="#reportModal" style="min-width: 150px;">
-                        <i data-feather="alert-triangle" class="me-2"></i>
-                        Report a Problem
-                    </button>
-                    <button type="button" class="btn btn-outline-primary btn-lg" style="min-width: 150px;">
-                        <i data-feather="bell" class="me-2"></i>
-                        Follow Status
-                    </button>
-                </div>
-            </div>
-
             <!-- 24 Hour Chart Section -->
             <div class="mb-5">
-                <h3 class="mb-4">{{ service.name }} outages reported in the last 24 hours</h3>
-                <div class="card">
-                    <div class="card-body" style="min-height: 300px;">
-                        <canvas id="reportsChart" style="max-height: 250px;"></canvas>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body" style="min-height: 350px; padding: 2rem;">
+                        <canvas id="reportsChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations and Problems Section -->
+            <div class="mb-5">
+                <h4 class="mb-4" style="font-weight: 600; color: var(--text-dark);">Emplacements les plus fréquemment signalés</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Tlemcen</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Fès, Meknès</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Annaba</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Rabat</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Casablanca</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Tanger</span>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <span class="badge bg-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Oujda</span>
                     </div>
                 </div>
                 
-                <div class="mt-3">
-                    <p class="text-muted" style="font-size: 0.9rem; line-height: 1.6;">
-                        This chart shows a view of problem reports submitted in the past 24 hours compared to the typical volume of reports by time of day. 
-                        It is typical to see reports increase during periods of peak usage. 
-                        When the number of reports exceeds our baseline, represented by the red line, we determine that a service disruption is occurring.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Problem Types Section -->
-            <div class="row mb-5">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">Most reported problems</h5>
-                            <div class="problem-stats">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span>Connection issues</span>
-                                    <div class="d-flex align-items-center">
-                                        <div class="progress me-2" style="width: 100px; height: 8px;">
-                                            <div class="progress-bar bg-danger" style="width: 51%"></div>
-                                        </div>
-                                        <strong>51%</strong>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span>Login problems</span>
-                                    <div class="d-flex align-items-center">
-                                        <div class="progress me-2" style="width: 100px; height: 8px;">
-                                            <div class="progress-bar bg-warning" style="width: 32%"></div>
-                                        </div>
-                                        <strong>32%</strong>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Loading issues</span>
-                                    <div class="d-flex align-items-center">
-                                        <div class="progress me-2" style="width: 100px; height: 8px;">
-                                            <div class="progress-bar bg-info" style="width: 17%"></div>
-                                        </div>
-                                        <strong>17%</strong>
-                                    </div>
-                                </div>
-                            </div>
+                <h4 class="mb-4 mt-5" style="font-weight: 600; color: var(--text-dark);">Problèmes les plus signalés</h4>
+                
+                <div class="row mb-5">
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h6>Internet mobile</h6>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">Live outage map</h5>
-                            <div id="map" style="height: 200px; border-radius: 8px;"></div>
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h6>Internet Fixe</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h6>Blackout total</h6>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Stay Informed Section -->
-            <div class="card mb-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <div class="card-body text-white text-center py-4">
-                    <h4 class="mb-3">Stay informed</h4>
-                    <p class="mb-4">Be the first to know when {{ service.name }} experiences an outage</p>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a href="#" class="btn btn-dark">
-                            <i data-feather="smartphone" class="me-2"></i>
-                            Download App
-                        </a>
-                        <a href="#" class="btn btn-outline-light">
-                            <i data-feather="bell" class="me-2"></i>
-                            Get Notifications
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Social Media Reports -->
+            <!-- Comment Section -->
             <div class="mb-5">
-                <h4 class="mb-4">{{ service.name }} social media reports</h4>
-                <div class="card">
-                    <div class="card-body">
-                        <div id="socialReports">
-                            <div class="d-flex align-items-start mb-4">
-                                <div class="flex-shrink-0">
-                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                        <i data-feather="twitter" class="text-white" style="width: 20px; height: 20px;"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <strong class="me-2">@user123</strong>
-                                        <small class="text-muted">2 hours ago</small>
-                                    </div>
-                                    <p class="mb-0">{{ service.name }} seems to be down for me. Anyone else having issues? #{{ service.name.lower() }}down</p>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex align-items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                        <i data-feather="twitter" class="text-white" style="width: 20px; height: 20px;"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <strong class="me-2">@techuser</strong>
-                                        <small class="text-muted">4 hours ago</small>
-                                    </div>
-                                    <p class="mb-0">Is {{ service.name }} working for anyone? Getting connection errors since this morning.</p>
-                                </div>
-                            </div>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body" style="padding: 2rem;">
+                        <div class="form-group mb-3">
+                            <textarea class="form-control" rows="4" placeholder="Ajouter un commentaire..."
+                                    style="border: 1px solid #dee2e6; border-radius: 8px; font-size: 0.95rem;"></textarea>
                         </div>
-                        <div class="text-center mt-4">
-                            <button class="btn btn-outline-primary">Show more posts</button>
+                        <div class="text-end">
+                            <button class="btn btn-yellow" style="padding: 0.5rem 2rem;">
+                                Publier
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </div>
 

@@ -3,100 +3,156 @@
 {% block title %}Dashboard - DownDetector Clone{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>
-                <i data-feather="activity" class="me-2"></i>
-                Service Status Dashboard
-            </h1>
-            <div class="input-group" style="max-width: 300px;">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search services...">
-                <span class="input-group-text">
-                    <i data-feather="search"></i>
-                </span>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">
+            When it comes to <span class="highlight">DownTime</span>,<br>
+            Every Minute Matters.
+        </h1>
+        
+        <div class="search-bar">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search for a service...">
+                <button class="btn btn-primary" type="button">
+                    <i data-feather="search" style="width: 16px; height: 16px;"></i>
+                </button>
             </div>
         </div>
-        
-        <!-- Status Summary -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-success">
-                            <i data-feather="check-circle" class="me-2"></i>
-                            Operational
-                        </h5>
-                        <h2 class="text-success" id="upCount">0</h2>
+    </div>
+</section>
+
+<!-- Featured Services -->
+<section class="container my-5">
+    <div class="row" id="featuredServices">
+        {% for service in services[:3] %}
+        <div class="col-md-4 mb-4">
+            <div class="service-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
+                <div class="p-4 text-center">
+                    <div class="service-icon" style="background: {% if service.name == 'Twitter' %}#1DA1F2{% elif service.name == 'YouTube' %}#FF0000{% elif service.name == 'TikTok' %}#000000{% else %}#5DADE2{% endif %};">
+                        {% if service.icon_path %}
+                        <img src="{{ url_for('static', filename=service.icon_path) }}" 
+                             alt="{{ service.name }}" 
+                             style="width: 30px; height: 30px; object-fit: contain; filter: brightness(0) invert(1);">
+                        {% else %}
+                        <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
+                        {% endif %}
                     </div>
+                    <h5 class="service-name">{{ service.name }}</h5>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-warning">
-                            <i data-feather="alert-triangle" class="me-2"></i>
-                            Issues
-                        </h5>
-                        <h2 class="text-warning" id="issuesCount">0</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-danger">
-                            <i data-feather="x-circle" class="me-2"></i>
-                            Down
-                        </h5>
-                        <h2 class="text-danger" id="downCount">0</h2>
-                    </div>
+                <div class="wave-container">
+                    <div class="wave status-{{ service.status }}"></div>
                 </div>
             </div>
         </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Add Banner Section -->
+<section class="container">
+    <div class="banner-placeholder">
+        <h4>Add Banner</h4>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section">
+    <div class="container">
+        <h2 class="section-title">Services</h2>
         
-        <!-- Services Grid -->
+        <div class="mb-4 text-end">
+            <div class="input-group" style="max-width: 300px; margin-left: auto;">
+                <input type="text" class="form-control" placeholder="Search...">
+                <button class="btn btn-primary" type="button">
+                    <i data-feather="search" style="width: 16px; height: 16px;"></i>
+                </button>
+            </div>
+        </div>
+        
         <div class="row" id="servicesGrid">
             {% for service in services %}
-            <div class="col-md-6 col-lg-4 mb-3 service-item" data-service-name="{{ service.name.lower() }}" data-service-id="{{ service.id }}">
-                <div class="card service-card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
+            <div class="col-md-6 col-lg-3 mb-4 service-item" data-service-name="{{ service.name.lower() }}" data-service-id="{{ service.id }}">
+                <div class="service-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
+                    <div class="p-4 text-center">
+                        <div class="service-icon" style="background: 
+                            {% if service.name == 'Twitter' %}#1DA1F2
+                            {% elif service.name == 'YouTube' %}#FF0000
+                            {% elif service.name == 'TikTok' %}#000000
+                            {% elif service.name == 'Instagram' %}#E4405F
+                            {% elif service.name == 'Facebook' %}#1877F2
+                            {% elif service.name == 'LinkedIn' %}#0077B5
+                            {% elif service.name == 'WhatsApp' %}#25D366
+                            {% elif service.name == 'Snapchat' %}#FFFC00
+                            {% elif service.name == 'Discord' %}#5865F2
+                            {% elif service.name == 'Reddit' %}#FF4500
+                            {% elif service.name == 'Spotify' %}#1DB954
+                            {% elif service.name == 'Gmail' %}#EA4335
+                            {% else %}#5DADE2{% endif %};">
                             {% if service.icon_path %}
                             <img src="{{ url_for('static', filename=service.icon_path) }}" 
-                                 alt="{{ service.name }} logo" 
-                                 class="service-logo me-2"
-                                 style="width: 32px; height: 32px; object-fit: contain;">
+                                 alt="{{ service.name }}" 
+                                 style="width: 30px; height: 30px; object-fit: contain; {% if service.name != 'Snapchat' %}filter: brightness(0) invert(1);{% endif %}">
+                            {% else %}
+                            <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
                             {% endif %}
-                            <span class="status-indicator status-{{ service.status }} me-2"></span>
-                            <h5 class="card-title mb-0">{{ service.name }}</h5>
                         </div>
-                        
-                        <p class="card-text text-muted small">
-                            {{ service.recent_reports }} reports in last 24h
-                        </p>
-                        
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ url_for('main.service_detail', service_id=service.id) }}" 
-                               class="btn btn-outline-primary btn-sm">
-                                <i data-feather="eye" class="me-1"></i>
-                                View Details
-                            </a>
-                            
-                            <small class="text-muted">
-                                {% if service.status == 'up' %}
-                                    <i data-feather="check" class="text-success"></i> Operational
-                                {% elif service.status == 'issues' %}
-                                    <i data-feather="alert-triangle" class="text-warning"></i> Issues
-                                {% else %}
-                                    <i data-feather="x" class="text-danger"></i> Down
-                                {% endif %}
-                            </small>
-                        </div>
+                        <h5 class="service-name">{{ service.name }}</h5>
+                    </div>
+                    <div class="wave-container">
+                        <div class="wave status-{{ service.status }}"></div>
                     </div>
                 </div>
             </div>
             {% endfor %}
+        </div>
+        
+        <!-- Add Banner at Bottom -->
+        <div class="row mt-5">
+            <div class="col-md-8">
+                <div class="row">
+                    {% set remaining_services = services[3:] %}
+                    {% for service in remaining_services[:4] %}
+                    <div class="col-md-6 mb-4">
+                        <div class="service-card" onclick="window.location.href='{{ url_for('main.service_detail', service_id=service.id) }}'" style="cursor: pointer;">
+                            <div class="p-4 text-center">
+                                <div class="service-icon" style="background: 
+                                    {% if service.name == 'Twitter' %}#1DA1F2
+                                    {% elif service.name == 'YouTube' %}#FF0000
+                                    {% elif service.name == 'TikTok' %}#000000
+                                    {% elif service.name == 'Instagram' %}#E4405F
+                                    {% elif service.name == 'Facebook' %}#1877F2
+                                    {% elif service.name == 'LinkedIn' %}#0077B5
+                                    {% elif service.name == 'WhatsApp' %}#25D366
+                                    {% elif service.name == 'Snapchat' %}#FFFC00
+                                    {% elif service.name == 'Discord' %}#5865F2
+                                    {% elif service.name == 'Reddit' %}#FF4500
+                                    {% elif service.name == 'Spotify' %}#1DB954
+                                    {% elif service.name == 'Gmail' %}#EA4335
+                                    {% else %}#5DADE2{% endif %};">
+                                    {% if service.icon_path %}
+                                    <img src="{{ url_for('static', filename=service.icon_path) }}" 
+                                         alt="{{ service.name }}" 
+                                         style="width: 30px; height: 30px; object-fit: contain; {% if service.name != 'Snapchat' %}filter: brightness(0) invert(1);{% endif %}">
+                                    {% else %}
+                                    <i data-feather="globe" style="color: white; width: 30px; height: 30px;"></i>
+                                    {% endif %}
+                                </div>
+                                <h5 class="service-name">{{ service.name }}</h5>
+                            </div>
+                            <div class="wave-container">
+                                <div class="wave status-{{ service.status }}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="banner-placeholder" style="height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center;">
+                    <h4>Add Banner</h4>
+                </div>
+            </div>
         </div>
         
         {% if not services %}
@@ -107,7 +163,7 @@
         </div>
         {% endif %}
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% block scripts %}
