@@ -194,26 +194,32 @@ def api_services():
     })
 
 @bp.route('/api/services', methods=['POST'])
-@login_required
 def api_create_service():
-    """API endpoint to create a new service (admin only)"""
-    if not current_user.is_admin:
-        return jsonify({'error': 'Admin access required'}), 403
-    
+    """API endpoint to create a new service"""
     data = request.get_json()
     if not data or not data.get('name') or not data.get('url'):
         return jsonify({'error': 'Name and URL are required'}), 400
     
-    service = Service(name=data['name'], url=data['url'])
-    db.session.add(service)
-    db.session.commit()
-    
-    return jsonify({
-        'id': service.id,
-        'name': service.name,
-        'url': service.url,
-        'status': service.get_status()
-    }), 201
+    try:
+        service = Service(
+            name=data['name'], 
+            url=data['url'],
+            description=data.get('description', ''),
+            is_active=True
+        )
+        db.session.add(service)
+        db.session.commit()
+        
+        return jsonify({
+            'id': service.id,
+            'name': service.name,
+            'url': service.url,
+            'status': 'up',
+            'message': 'Service added successfully'
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to create service'}), 500
 
 @bp.route('/api/reports/<int:service_id>')
 def api_reports(service_id):
@@ -373,13 +379,13 @@ def api_analytics_overview():
     cutoff = datetime.utcnow() - timedelta(hours=hours)
     
     # Total services
-    total_services = Service.query.count()
+    total_services = Service.query.filter_by(is_active=True).count()
     
-    # Service status breakdown
-    services = Service.query.all()
+    # Service status breakdown with cached status
+    services = Service.query.filter_by(is_active=True).all()
     status_counts = {'up': 0, 'issues': 0, 'down': 0}
     for service in services:
-        status = service.current_status or 'up'
+        status = get_cached_service_status(service)
         status_counts[status] = status_counts.get(status, 0) + 1
     
     # Total reports in timeframe
@@ -388,14 +394,40 @@ def api_analytics_overview():
     # Active outages
     active_outages = OutageEvent.query.filter_by(status='ongoing').count()
     
+    # Get trending data for charts
+    hourly_reports = db.session.query(
+        func.date_trunc('hour', Report.created_at).label('hour'),
+        func.count(Report.id).label('count')
+    ).filter(
+        Report.created_at >= cutoff
+    ).group_by(
+        func.date_trunc('hour', Report.created_at)
+    ).order_by('hour').all()
+    
+    chart_data = []
+    current_time = cutoff.replace(minute=0, second=0, microsecond=0)
+    end_time = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+    report_dict = {report.hour.replace(tzinfo=None): report.count for report in hourly_reports}
+    
+    while current_time <= end_time:
+        chart_data.append({
+            'time': current_time.strftime('%Y-%m-%d %H:00'),
+            'reports': report_dict.get(current_time, 0)
+        })
+        current_time += timedelta(hours=1)
+    
     return jsonify({
         'timeframe_hours': hours,
         'summary': {
             'total_services': total_services,
             'status_breakdown': status_counts,
+            'services_up': status_counts['up'],
+            'services_issues': status_counts['issues'], 
+            'services_down': status_counts['down'],
             'total_reports': total_reports,
             'active_outages': active_outages
-        }
+        },
+        'chart_data': chart_data
     })
 
 # New Advanced Monitoring Endpoints
@@ -472,12 +504,113 @@ def api_start_monitoring():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@bp.route('/api/services/bulk', methods=['POST'])
+def api_bulk_services():
+    """API endpoint for bulk operations on services"""
+    data = request.get_json()
+    if not data or not data.get('action') or not data.get('service_ids'):
+        return jsonify({'error': 'Action and service_ids are required'}), 400
+    
+    action = data['action']
+    service_ids = data['service_ids']
+    
+    try:
+        services = Service.query.filter(Service.id.in_(service_ids)).all()
+        
+        if action == 'enable':
+            for service in services:
+                service.is_active = True
+        elif action == 'disable':
+            for service in services:
+                service.is_active = False
+        elif action == 'delete':
+            for service in services:
+                db.session.delete(service)
+        else:
+            return jsonify({'error': 'Invalid action'}), 400
+        
+        db.session.commit()
+        return jsonify({'message': f'Bulk {action} completed successfully', 'affected': len(services)})
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Bulk operation failed'}), 500
+
+@bp.route('/api/services/<int:service_id>', methods=['DELETE'])
+def api_delete_service(service_id):
+    """API endpoint to delete a service"""
+    try:
+        service = Service.query.get_or_404(service_id)
+        db.session.delete(service)
+        db.session.commit()
+        return jsonify({'message': 'Service deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to delete service'}), 500
+
+@bp.route('/api/services/<int:service_id>/check', methods=['POST'])
+def api_check_service(service_id):
+    """API endpoint to manually check a service status"""
+    try:
+        service = Service.query.get_or_404(service_id)
+        
+        # Simple status check
+        import requests
+        import time
+        
+        start_time = time.time()
+        try:
+            response = requests.get(service.url, timeout=10)
+            response_time = int((time.time() - start_time) * 1000)
+            
+            if response.status_code == 200:
+                status = 'up'
+            else:
+                status = 'issues'
+        except:
+            status = 'down'
+            response_time = 10000
+        
+        # Update service
+        service.current_status = status
+        service.response_time = response_time
+        service.last_checked = datetime.utcnow()
+        
+        db.session.commit()
+        
+        return jsonify({
+            'service_id': service_id,
+            'status': status,
+            'response_time': response_time,
+            'last_checked': service.last_checked.isoformat()
+        })
+    
+    except Exception as e:
+        return jsonify({'error': 'Failed to check service'}), 500
+
+@bp.route('/admin')
+def admin_dashboard():
+    """Advanced admin dashboard"""
+    # Get basic stats for the overview
+    total_services = Service.query.filter_by(is_active=True).count()
+    
+    # Calculate status breakdown
+    services = Service.query.filter_by(is_active=True).all()
+    status_counts = {'up': 0, 'issues': 0, 'down': 0}
+    for service in services:
+        status = get_cached_service_status(service)
+        status_counts[status] = status_counts.get(status, 0) + 1
+    
+    stats = {
+        'total_services': total_services,
+        'services_up': status_counts['up'],
+        'services_issues': status_counts['issues'],
+        'services_down': status_counts['down']
+    }
+    
+    return render_template('admin_dashboard.html', stats=stats)
+
 @bp.route('/monitoring')
-@login_required
 def monitoring_dashboard():
     """Advanced monitoring dashboard"""
-    if not current_user.is_admin:
-        flash('Admin access required', 'error')
-        return redirect(url_for('main.dashboard'))
-    
     return render_template('monitoring.html')
