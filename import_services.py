@@ -14,7 +14,7 @@ from datetime import datetime
 
 # Setup Flask app context
 from app import app, db
-from models import Service
+from models import Service, ServiceType
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -200,6 +200,17 @@ class ServiceImporter:
         imported_count = 0
         skipped_count = 0
         
+        # Get or create a default service type
+        default_type = ServiceType.query.filter_by(name='General Services').first()
+        if not default_type:
+            default_type = ServiceType(
+                name='General Services',
+                description='General online services and platforms',
+                icon_class='fas fa-globe'
+            )
+            db.session.add(default_type)
+            db.session.commit()
+        
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 for line_num, line in enumerate(f, 1):
@@ -226,6 +237,7 @@ class ServiceImporter:
                     
                     # Create service
                     service = Service(
+                        type_id=default_type.id,
                         name=service_name,
                         url=service_url,
                         icon_path=icon_path

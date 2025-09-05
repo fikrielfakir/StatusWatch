@@ -64,36 +64,58 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def dashboard():
-    """Ultra-simplified dashboard for maximum speed"""
-    cache_key = "dashboard_simple"
+    """Dashboard with pagination support"""
+    page = request.args.get('page', 1, type=int)
+    per_page = 20  # Show 20 services per page
+    
+    cache_key = f"dashboard_page_{page}"
     now = datetime.utcnow()
     
     # Check cache first
     if cache_key in _services_cache:
         cached_data, timestamp = _services_cache[cache_key]
         if (now - timestamp).total_seconds() < 300:  # 5 minute cache
-            return render_template('dashboard.html', services=cached_data)
+            return render_template('dashboard.html', **cached_data)
     
-    # Load only essential data for display
-    services_data = [
-        {'id': 1, 'name': 'WhatsApp', 'icon_path': 'images/logos/WhatsApp_logo_icon.png', 'status': 'up'},
-        {'id': 2, 'name': 'Instagram', 'icon_path': 'images/logos/Instagram_logo_icon.png', 'status': 'up'},
-        {'id': 3, 'name': 'Facebook', 'icon_path': 'images/logos/Facebook_logo_icon.png', 'status': 'up'},
-        {'id': 4, 'name': 'Twitter', 'icon_path': 'images/logos/Twitter_X_logo_icon.png', 'status': 'up'},
-        {'id': 5, 'name': 'YouTube', 'icon_path': 'images/logos/YouTube_logo_icon.png', 'status': 'up'},
-        {'id': 6, 'name': 'Gmail', 'icon_path': 'images/logos/Gmail_logo_icon.png', 'status': 'up'},
-        {'id': 7, 'name': 'Discord', 'icon_path': 'images/logos/Discord_logo_icon.png', 'status': 'up'},
-        {'id': 8, 'name': 'TikTok', 'icon_path': 'images/logos/TikTok_logo_icon.png', 'status': 'up'},
-        {'id': 9, 'name': 'LinkedIn', 'icon_path': 'images/logos/LinkedIn_logo_icon.png', 'status': 'up'},
-        {'id': 10, 'name': 'Snapchat', 'icon_path': 'images/logos/Snapchat_logo_icon.png', 'status': 'up'},
-        {'id': 11, 'name': 'Reddit', 'icon_path': 'images/logos/Reddit_logo_icon.png', 'status': 'up'},
-        {'id': 12, 'name': 'Spotify', 'icon_path': 'images/logos/Spotify_logo_icon.png', 'status': 'up'},
-    ]
+    # Get paginated services from database
+    services_query = Service.query.filter_by(is_active=True).order_by(Service.name)
+    pagination = services_query.paginate(
+        page=page, 
+        per_page=per_page, 
+        error_out=False
+    )
+    
+    services = pagination.items
+    
+    # Convert to simple format for template
+    services_data = []
+    for service in services:
+        services_data.append({
+            'id': service.id,
+            'name': service.name,
+            'icon_path': service.icon_path or 'images/logos/default_icon.png',
+            'status': get_cached_service_status(service),
+            'url': service.url
+        })
+    
+    template_data = {
+        'services': services_data,
+        'pagination': {
+            'page': page,
+            'pages': pagination.pages,
+            'per_page': per_page,
+            'total': pagination.total,
+            'has_prev': pagination.has_prev,
+            'has_next': pagination.has_next,
+            'prev_num': pagination.prev_num,
+            'next_num': pagination.next_num
+        }
+    }
     
     # Cache for next request
-    _services_cache[cache_key] = (services_data, now)
+    _services_cache[cache_key] = (template_data, now)
     
-    return render_template('dashboard.html', services=services_data)
+    return render_template('dashboard.html', **template_data)
 
 @bp.route('/service/<int:service_id>')
 def service_detail(service_id):
@@ -111,29 +133,65 @@ def service_detail(service_id):
 
 @bp.route('/api/services')
 def api_services():
-    """API endpoint to get all services - optimized"""
-    services = Service.query.filter_by(is_active=True).all()
+    """API endpoint to get services with pagination"""
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
+    search = request.args.get('search', '')
     
-    # Pre-calculate report counts for all services
-    cutoff = datetime.utcnow() - timedelta(hours=24)
-    report_counts = dict(
-        db.session.query(
-            Report.service_id,
-            func.count(Report.id)
-        ).filter(
-            Report.created_at >= cutoff
-        ).group_by(Report.service_id).all()
+    # Limit per_page to reasonable values
+    per_page = min(per_page, 100)
+    
+    # Build query with search if provided
+    query = Service.query.filter_by(is_active=True)
+    if search:
+        query = query.filter(Service.name.ilike(f'%{search}%'))
+    
+    # Apply pagination
+    pagination = query.order_by(Service.name).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
     )
     
-    return jsonify([{
-        'id': service.id,
-        'name': service.name,
-        'url': service.url,
-        'icon_path': service.icon_path,
-        'status': get_cached_service_status(service),
-        'recent_reports': report_counts.get(service.id, 0),
-        'response_time': service.response_time
-    } for service in services])
+    services = pagination.items
+    
+    # Pre-calculate report counts for current page services
+    cutoff = datetime.utcnow() - timedelta(hours=24)
+    service_ids = [s.id for s in services]
+    if service_ids:
+        report_counts = dict(
+            db.session.query(
+                Report.service_id,
+                func.count(Report.id)
+            ).filter(
+                Report.service_id.in_(service_ids),
+                Report.created_at >= cutoff
+            ).group_by(Report.service_id).all()
+        )
+    else:
+        report_counts = {}
+    
+    return jsonify({
+        'services': [{
+            'id': service.id,
+            'name': service.name,
+            'url': service.url,
+            'icon_path': service.icon_path,
+            'status': get_cached_service_status(service),
+            'recent_reports': report_counts.get(service.id, 0),
+            'response_time': service.response_time
+        } for service in services],
+        'pagination': {
+            'page': page,
+            'pages': pagination.pages,
+            'per_page': per_page,
+            'total': pagination.total,
+            'has_prev': pagination.has_prev,
+            'has_next': pagination.has_next,
+            'prev_num': pagination.prev_num,
+            'next_num': pagination.next_num
+        }
+    })
 
 @bp.route('/api/services', methods=['POST'])
 @login_required
