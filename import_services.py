@@ -138,35 +138,21 @@ class ServiceImporter:
     
     def get_icon_url(self, service_name, service_url):
         """Get icon URL using various services"""
-        # Try Google's favicon service first
         try:
             parsed_url = urlparse(service_url)
-            domain = parsed_url.netloc.lower()
+            domain = parsed_url.netloc.lower().replace('www.', '')
             
-            # Google S2 favicon service
-            favicon_url = f'https://www.google.com/s2/favicons?domain={domain}&sz=64'
+            # Google S2 favicon service - higher resolution
+            favicon_url = f'https://www.google.com/s2/favicons?domain={domain}&sz=128'
             
-            response = requests.head(favicon_url, timeout=5)
-            if response.status_code == 200:
-                return favicon_url
+            # Always use Google's favicon service as it's most reliable
+            return favicon_url
                 
         except Exception as e:
-            logger.warning(f"Could not fetch favicon for {service_name}: {e}")
-        
-        # Fallback: try direct favicon
-        try:
-            parsed_url = urlparse(service_url)
-            domain = parsed_url.netloc
-            favicon_url = f'{parsed_url.scheme}://{domain}/favicon.ico'
-            
-            response = requests.head(favicon_url, timeout=5)
-            if response.status_code == 200:
-                return favicon_url
-                
-        except Exception as e:
-            logger.warning(f"Could not fetch direct favicon for {service_name}: {e}")
-        
-        return None
+            logger.warning(f"Could not generate favicon URL for {service_name}: {e}")
+            # Fallback to generic domain
+            safe_domain = service_name.lower().replace(' ', '').replace('-', '') + '.com'
+            return f'https://www.google.com/s2/favicons?domain={safe_domain}&sz=128'
     
     def download_icon(self, icon_url, service_name):
         """Download and save icon locally"""
@@ -180,16 +166,27 @@ class ServiceImporter:
             filename = f'{safe_name}_icon.png'
             filepath = os.path.join(self.icon_dir, filename)
             
-            # Download icon
-            response = requests.get(icon_url, timeout=10)
+            # Skip if file already exists
+            if os.path.exists(filepath):
+                return f'images/logos/{filename}'
+            
+            # Download icon with better headers
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(icon_url, timeout=15, headers=headers)
             response.raise_for_status()
             
-            # Save file
-            with open(filepath, 'wb') as f:
-                f.write(response.content)
-            
-            # Return relative path for database
-            return f'images/logos/{filename}'
+            # Only save if we got actual content
+            if len(response.content) > 100:  # Avoid saving tiny error images
+                with open(filepath, 'wb') as f:
+                    f.write(response.content)
+                
+                logger.info(f"Downloaded icon for {service_name}")
+                return f'images/logos/{filename}'
+            else:
+                logger.warning(f"Icon too small for {service_name}, skipping")
+                return None
             
         except Exception as e:
             logger.warning(f"Could not download icon for {service_name}: {e}")
